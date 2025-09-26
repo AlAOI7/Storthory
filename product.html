@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنتجات | Be Pretty</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .product-card {
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background-color: #fff;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .product-card .card-img-top {
+            height: 180px;
+            object-fit: cover;
+        }
+        .product-actions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+        }
+        .product-actions .btn {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff3366;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .product-actions .btn:hover {
+            background-color: #ff3366;
+            color: #fff;
+        }
+        .badge-discount {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .product-price {
+            font-size: 1.25rem;
+            color: #ff3366;
+        }
+        .product-old-price {
+            text-decoration: line-through;
+            font-size: 0.8rem;
+            color: #999;
+        }
+        .rating .fas {
+            color: gold;
+        }
+        .bottom-tab-bar {
+            border-top: 1px solid #eee;
+        }
+        .bottom-tab-bar .tab-item {
+            color: #777;
+            transition: color 0.3s;
+        }
+        .bottom-tab-bar .tab-item.active {
+            color: #ff3366;
+        }
+        .modal-body .img-fluid {
+            border: 1px solid #ddd;
+        }
+        /* New styles for the category slider */
+        .category-slider {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 10px;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+        .category-slider::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        .category-item {
+            display: inline-block;
+            margin-left: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #666;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+        }
+        .category-item:first-child {
+            margin-left: 0;
+        }
+        .category-item:hover {
+            background-color: #f1f1f1;
+            transform: translateY(-2px);
+        }
+        .category-item.active {
+            background-color: #ff3366;
+            color: #fff;
+            border-color: #ff3366;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="bg-white shadow-sm p-3 fixed-top">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="home.html" class="btn"><i class="fas fa-arrow-right fa-lg text-dark"></i></a>
+            <h5 class="mb-0 fw-bold">المنتجات</h5>
+            <span></span>
+        </div>
+    </header>
+
+    <main class="container py-4" style="margin-top: 60px; margin-bottom: 70px;">
+        <section class="category-section mb-4">
+            <div class="category-slider">
+                <a href="products.html" class="category-item all-category">الكل</a>
+                </div>
+        </section>
+
+        <section class="products-section">
+            <h4 class="fw-bold mb-3">منتجات <span id="category-title" class="text-danger"></span></h4>
+            
+            <div id="products-container" class="row row-cols-2 row-cols-md-3 g-3">
+                </div>
+        </section>
+    </main>
+
+    <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <img id="modal-product-image" src="" alt="صورة المنتج" class="img-fluid rounded mb-3" style="max-height: 250px;">
+                    <h4 class="fw-bold mb-1" id="modal-product-name"></h4>
+                    <span class="badge bg-danger mb-2" id="modal-product-category"></span>
+                    <p class="text-muted" id="modal-product-price"></p>
+                    <div class="rating mb-3" id="modal-product-rating"></div>
+                    <p class="text-muted" id="modal-product-description"></p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-danger rounded-pill fw-bold"><i class="fas fa-shopping-cart me-2"></i>أضف إلى السلة</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-tab-bar fixed-bottom bg-white shadow-lg d-flex justify-content-around align-items-center py-2">
+        <a href="home.html" class="tab-item text-center text-decoration-none">
+            <i class="fas fa-home fa-lg text-muted"></i>
+            <span class="d-block mt-1">الرئيسية</span>
+        </a>
+        <a href="categories.html" class="tab-item text-center text-decoration-none active">
+            <i class="fas fa-th-large fa-lg text-danger"></i>
+            <span class="d-block mt-1 fw-bold text-danger">الفئات</span>
+        </a>
+        <a href="cart.html" class="tab-item text-center text-decoration-none">
+            <i class="fas fa-shopping-cart fa-lg text-muted"></i>
+            <span class="d-block mt-1">السلة</span>
+        </a>
+        <a href="orders.html" class="tab-item text-center text-decoration-none">
+            <i class="fas fa-list-alt fa-lg text-muted"></i>
+            <span class="d-block mt-1">الطلبات</span>
+        </a>
+        <a href="profile.html" class="tab-item text-center text-decoration-none">
+            <i class="fas fa-user fa-lg text-muted"></i>
+            <span class="d-block mt-1">حسابي</span>
+        </a>
+    </nav>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Sample product data
+            const products = [
+                {
+                    id: 1,
+                    name: "مرطب الوجه الليلي",
+                    category: "skincare",
+                    categoryName: "عناية بالبشرة",
+                    image: "https://via.placeholder.com/400x300/F5CBA7/000000?text=Moisturizer",
+                    price: 150,
+                    oldPrice: 200,
+                    rating: 4,
+                    description: "مرطب ليلي فاخر غني بالفيتامينات والمعادن يغذي بشرتك بعمق ويمنحها إشراقة طبيعية في الصباح."
+                },
+                {
+                    id: 2,
+                    name: "مجموعة ظلال العيون",
+                    category: "makeup",
+                    categoryName: "مكياج",
+                    image: "https://via.placeholder.com/400x300/FADBD8/000000?text=Eyeshadow",
+                    price: 250,
+                    oldPrice: null,
+                    rating: 5,
+                    description: "مجموعة ظلال عيون تحتوي على 12 لوناً مختلفاً بتركيبة غنية تدوم طويلاً، مثالية لإطلالات نهارية وليلية."
+                },
+                {
+                    id: 3,
+                    name: "عطر برائحة الورد",
+                    category: "perfumes",
+                    categoryName: "عطور",
+                    image: "https://via.placeholder.com/400x300/E8DAF8/000000?text=Perfume",
+                    price: 300,
+                    oldPrice: null,
+                    rating: 4,
+                    description: "عطر أنيق يمزج بين روائح الورد والمسك لإضفاء لمسة من الجمال والجاذبية تدوم طوال اليوم."
+                },
+                {
+                    id: 4,
+                    name: "أحمر شفاه سائل",
+                    category: "makeup",
+                    categoryName: "مكياج",
+                    image: "https://via.placeholder.com/400x300/FADBD8/000000?text=Lipstick",
+                    price: 85,
+                    oldPrice: 100,
+                    rating: 3,
+                    description: "أحمر شفاه بتركيبة سائلة غنية بالألوان، يمنح شفتيك مظهرًا جذابًا ومخمليًا."
+                },
+                {
+                    id: 5,
+                    name: "قناع ترطيب الوجه",
+                    category: "skincare",
+                    categoryName: "عناية بالبشرة",
+                    image: "https://via.placeholder.com/400x300/F5CBA7/000000?text=Mask",
+                    price: 90,
+                    oldPrice: null,
+                    rating: 4,
+                    description: "قناع وجه مرطب يغذي البشرة بعمق ويعيد لها حيويتها ونضارتها في دقائق معدودة."
+                }
+            ];
+
+            // Get unique categories from products
+            const categories = [...new Set(products.map(p => p.category))].map(cat => {
+                return {
+                    id: cat,
+                    name: products.find(p => p.category === cat).categoryName
+                };
+            });
+
+            const categorySlider = $('.category-slider');
+            
+            // Add categories to the slider
+            categories.forEach(cat => {
+                categorySlider.append(`
+                    <a href="products.html?category=${cat.id}" class="category-item">${cat.name}</a>
+                `);
+            });
+
+            // Function to generate the product card HTML
+            function createProductCard(product) {
+                const oldPriceHtml = product.oldPrice ? `<span class="product-old-price small">${product.oldPrice} ر.س</span>` : '';
+                const ratingHtml = getRatingStars(product.rating);
+
+                return `
+                    <div class="col product-item" data-category="${product.category}">
+                        <div class="card product-card shadow-sm border-0">
+                            <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                            <div class="product-actions d-flex flex-column gap-2">
+                                <button class="btn btn-sm add-to-cart-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="أضف إلى السلة"><i class="fas fa-shopping-cart"></i></button>
+                                <button class="btn btn-sm add-to-fav-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="أضف إلى المفضلة"><i class="fas fa-heart"></i></button>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="card-text small text-muted mb-1">${product.categoryName}</p>
+                                <h6 class="card-title fw-bold mb-1">${product.name}</h6>
+                                <div class="d-flex justify-content-center align-items-center mb-1">
+                                    <span class="product-price fw-bold me-2">${product.price} ر.س</span>
+                                    ${oldPriceHtml}
+                                </div>
+                                <div class="rating">
+                                    ${ratingHtml}
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm mt-2 rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#productDetailsModal" data-product-id="${product.id}">عرض</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Function to generate rating stars HTML
+            function getRatingStars(rating) {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rating) {
+                        stars += `<i class="fas fa-star"></i>`;
+                    } else {
+                        stars += `<i class="far fa-star"></i>`;
+                    }
+                }
+                return stars;
+            }
+
+            // Render products and handle category filtering
+            function renderProducts(category) {
+                let filteredProducts;
+                let categoryName;
+                
+                if (category) {
+                    filteredProducts = products.filter(p => p.category === category);
+                    categoryName = filteredProducts[0]?.categoryName || "الكل";
+                } else {
+                    filteredProducts = products;
+                    categoryName = "الكل";
+                }
+                
+                $('#category-title').text(categoryName);
+                
+                const productsContainer = $('#products-container');
+                productsContainer.empty(); // Clear existing content
+                
+                if (filteredProducts.length === 0) {
+                    productsContainer.append('<div class="col-12 text-center text-muted mt-5">لا توجد منتجات في هذه الفئة حالياً.</div>');
+                } else {
+                    filteredProducts.forEach(product => {
+                        productsContainer.append(createProductCard(product));
+                    });
+                }
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedCategory = urlParams.get('category');
+            
+            renderProducts(selectedCategory);
+
+            // Add active class to the selected category item
+            $('.category-item').removeClass('active');
+            if (selectedCategory) {
+                $(`.category-item[href*="?category=${selectedCategory}"]`).addClass('active');
+            } else {
+                $('.all-category').addClass('active');
+            }
+
+            // Handle product details modal
+            $('#productDetailsModal').on('show.bs.modal', function(event) {
+                const button = $(event.relatedTarget);
+                const productId = button.data('product-id');
+                const product = products.find(p => p.id === productId);
+
+                if (product) {
+                    $('#modal-product-image').attr('src', product.image);
+                    $('#modal-product-name').text(product.name);
+                    $('#modal-product-category').text(product.categoryName);
+                    $('#modal-product-price').html(
+                        `<span class="fw-bold">${product.price} ر.س</span>` + (product.oldPrice ? ` <span class="text-decoration-line-through text-muted small">${product.oldPrice} ر.س</span>` : '')
+                    );
+                    $('#modal-product-description').text(product.description);
+                    $('#modal-product-rating').html(getRatingStars(product.rating));
+                }
+            });
+
+            // Tooltips initialization
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+            // Example for Add to Cart/Favorites buttons
+            $(document).on('click', '.add-to-cart-btn', function(e) {
+                e.stopPropagation();
+                alert('تم إضافة المنتج إلى السلة!');
+            });
+            $(document).on('click', '.add-to-fav-btn', function(e) {
+                e.stopPropagation();
+                alert('تم إضافة المنتج إلى المفضلة!');
+            });
+        });
+    </script>
+</body>
+</html>

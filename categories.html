@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الفئات | Be Pretty</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    
+    /* Add to existing style.css file */
+body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: #f8f9fa;
+    direction: rtl;
+    text-align: right;
+}
+
+.fixed-top, .fixed-bottom {
+    z-index: 1000;
+}
+
+.bottom-tab-bar {
+    border-top: 1px solid #dee2e6;
+}
+
+.tab-item.active i {
+    color: #ff3366 !important;
+}
+
+.tab-item.active span {
+    color: #ff3366 !important;
+}
+
+.category-link {
+    display: block;
+}
+
+.card-img-top {
+    height: 150px;
+    object-fit: cover;
+}
+
+    
+</style>
+<body>
+    
+
+    <header class="bg-white shadow-sm p-3 fixed-top">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="home.html" class="btn"><i class="fas fa-arrow-right fa-lg text-dark"></i></a>
+            <h5 class="mb-0 fw-bold">الفئات</h5>
+            <span></span> </div>
+    </header>
+
+    <main class="container-fluid py-4" style="margin-top: 60px; margin-bottom: 70px;">
+        <div class="row row-cols-2 g-3">
+            <div class="col">
+                <a href="categories-details.html" class="text-decoration-none text-dark category-link" data-category-id="1">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
+                        <img src="img/1.jpg" class="card-img-top p-2 rounded-3" alt="مكياج">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">مكياج</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="categories-details.html" class="text-decoration-none text-dark category-link" data-category-id="2">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
+                        <img src="img/2.jpg" class="card-img-top p-2 rounded-3" alt="عناية بالبشرة">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">عناية بالبشرة</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="categories-details.html" class="text-decoration-none text-dark category-link" data-category-id="3">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
+                        <img src="img/1.jpg" class="card-img-top p-2 rounded-3" alt="عطور">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">عطور</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="#" class="text-decoration-none text-dark category-link" data-category-id="3">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
+                        <img src="img/3.jpg" class="card-img-top p-2 rounded-3" alt="عطور">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">عطور</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="#" class="text-decoration-none text-dark category-link" data-category-id="3">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
+                        <img src="img/3.jpg" class="card-img-top p-2 rounded-3" alt="عطور">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">عطور</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="#" class="text-decoration-none text-dark category-link" data-category-id="4">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
+                        <img src="img/4.jpg" class="card-img-top p-2 rounded-3" alt="عناية بالشعر">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">عناية بالشعر</h5>
+                        </div>
+                        
+                        
+                    </div>
+                </a>
+            </div>
+            
+            </div>
+    </main>
+
+    <nav class="bottom-tab-bar fixed-bottom bg-white shadow-lg d-flex justify-content-around align-items-center py-2">
+        <a href="home.html" class="tab-item text-center text-decoration-none">
+            <i class="fas fa-home fa-lg text-muted"></i>
+            <span class="d-block mt-1">الرئيسية</span>
+        </a>
+        <a href="categories.html" class="tab-item text-center text-decoration-none active">
+            <i class="fas fa-th-large fa-lg text-danger"></i>
+            <span class="d-block mt-1 fw-bold text-danger">الفئات</span>
+        </a>
+        <a href="cart.html" class="tab-item text-center text-decoration-none">
+            <i class="fas fa-shopping-cart fa-lg text-muted"></i>
+            <span class="d-block mt-1">السلة</span>
+        </a>
+        <a href="orders.html" class="tab-item text-center text-decoration-none">
+            <i class="fas fa-list-alt fa-lg text-muted"></i>
+            <span class="d-block mt-1">الطلبات</span>
+        </a>
+        <a href="profile.html" class="tab-item text-center text-decoration-none">
+            <i class="fas fa-user fa-lg text-muted"></i>
+            <span class="d-block mt-1">حسابي</span>
+        </a>
+    </nav>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!--   <script>
+        $(document).ready(function() {
+            // Handle category link click
+            $('.category-link').on('click', function(e) {
+                e.preventDefault();
+                const categoryId = $(this).data('category-id');
+                // Here, you would navigate to the category details page
+                // For example:
+                // window.location.href = `category-details.html?id=${categoryId}`;
+                alert(`جارٍ الانتقال إلى صفحة فئة رقم ${categoryId}...`);
+            });
+        });
+    </script -->>
+</body>
+</html>

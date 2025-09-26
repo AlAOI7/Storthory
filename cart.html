@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>السلة | Be Pretty</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="bg-white shadow-sm p-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="home.html" class="btn"><i class="fas fa-arrow-right fa-lg text-dark"></i></a>
+            <h5 class="mb-0 fw-bold">السلة</h5>
+            <span></span> </div>
+    </header>
+
+    <main class="container-fluid py-4">
+        <section class="cart-items-section mb-4">
+            <div id="cart-list" class="d-flex flex-column gap-3">
+                <div class="card cart-item shadow-sm border-0" data-price="150" data-id="1">
+                    <div class="card-body d-flex align-items-center p-3">
+                        <img src="img/1.jpg" class="img-fluid rounded me-3" alt="Product 1" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title fw-bold mb-1">منتج العناية بالبشرة</h6>
+                            <p class="mb-1 text-danger fw-bold fs-5"><span class="item-total-price">150</span> ر.س</p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle quantity-btn" data-action="minus"><i class="fas fa-minus"></i></button>
+                            <span class="quantity mx-2 fw-bold" style="min-width: 20px; text-align: center;">1</span>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle quantity-btn" data-action="plus"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <button class="btn btn-sm text-danger ms-3 remove-btn"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+
+                <div class="card cart-item shadow-sm border-0" data-price="250" data-id="2">
+                    <div class="card-body d-flex align-items-center p-3">
+                        <img src="img/2.jpg" class="img-fluid rounded me-3" alt="Product 2" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title fw-bold mb-1">مجموعة المكياج</h6>
+                            <p class="mb-1 text-danger fw-bold fs-5"><span class="item-total-price">250</span> ر.س</p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle quantity-btn" data-action="minus"><i class="fas fa-minus"></i></button>
+                            <span class="quantity mx-2 fw-bold" style="min-width: 20px; text-align: center;">1</span>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle quantity-btn" data-action="plus"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <button class="btn btn-sm text-danger ms-3 remove-btn"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="totals-section bg-white p-4 rounded shadow-sm">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">المجموع الفرعي</span>
+                <span class="fw-bold fs-5 text-dark"><span id="subtotal">0</span> ر.س</span>
+            </div>
+            <div class="d-flex justify-content-between mb-4">
+                <span class="text-muted">تكاليف الشحن</span>
+                <span class="fw-bold fs-5 text-dark"><span id="shipping">15</span> ر.س</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mb-3">
+                <span class="fw-bold fs-4 text-primary">المجموع الكلي</span>
+                <span class="fw-bold fs-4 text-danger"><span id="total-price">0</span> ر.س</span>
+            </div>
+            <div class="d-grid gap-2">
+                <button id="checkout-btn" class="btn btn-danger btn-lg rounded-pill fw-bold">الدفع الآن</button>
+                <a href="home.html" class="btn btn-outline-danger rounded-pill fw-bold">متابعة التسوق</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
