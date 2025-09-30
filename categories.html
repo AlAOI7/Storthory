@@ -4,165 +4,473 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الفئات | Be Pretty</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff3366;
+            --secondary-color: #ff3366;
+            --accent-color: #ff9a8b;
+            --dark-color: #2c2c54;
+            --light-color: #f7f7f7;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding-bottom: 70px;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+        }
+        
+        .icon-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .icon-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .main-content {
+            margin-top: 80px;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            color: inherit;
+        }
+        
+        .category-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .category-info {
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+        
+        .category-count {
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .tab-item.active {
+            color: var(--primary-color);
+        }
+        
+        .tab-item i {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+        
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-bar-container {
+            position: relative;
+            margin: 15px 15px 0;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.9);
+            font-size: 14px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+        
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+        
+        footer h5, footer h6 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        footer ul {
+            padding: 0;
+            list-style: none;
+        }
+        
+        footer ul li {
+            margin-bottom: 8px;
+        }
+        
+        footer a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        footer a:hover {
+            color: var(--primary-color);
+        }
+        
+        .social-links a {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin-left: 10px;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary-color);
+        }
+        
+        @media (min-width: 576px) {
+            .category-img {
+                height: 200px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .category-img {
+                height: 220px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .category-img {
+                height: 240px;
+            }
+        }
+    </style>
 </head>
-<style>
-    
-    /* Add to existing style.css file */
-body {
-    font-family: 'Tajawal', sans-serif;
-    background-color: #f8f9fa;
-    direction: rtl;
-    text-align: right;
-}
-
-.fixed-top, .fixed-bottom {
-    z-index: 1000;
-}
-
-.bottom-tab-bar {
-    border-top: 1px solid #dee2e6;
-}
-
-.tab-item.active i {
-    color: #ff3366 !important;
-}
-
-.tab-item.active span {
-    color: #ff3366 !important;
-}
-
-.category-link {
-    display: block;
-}
-
-.card-img-top {
-    height: 150px;
-    object-fit: cover;
-}
-
-    
-</style>
 <body>
-    
 
-    <header class="bg-white shadow-sm p-3 fixed-top">
-        <div class="d-flex justify-content-between align-items-center">
-            <a href="home.html" class="btn"><i class="fas fa-arrow-right fa-lg text-dark"></i></a>
+    <header class="main-header">
+        <div class="header-top">
+            <a href="home.html" class="icon-btn"><i class="fas fa-arrow-right"></i></a>
             <h5 class="mb-0 fw-bold">الفئات</h5>
-            <span></span> </div>
+            <div class="header-icons">
+                <button class="icon-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="search-bar-container">
+            <input type="text" placeholder="ابحث عن فئة..." class="search-input">
+            <i class="fas fa-search search-icon"></i>
+        </div>
     </header>
 
-    <main class="container-fluid py-4" style="margin-top: 60px; margin-bottom: 70px;">
-        <div class="row row-cols-2 g-3">
-            <div class="col">
-                <a href="categories-details.html" class="text-decoration-none text-dark category-link" data-category-id="1">
-                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
-                        <img src="img/1.jpg" class="card-img-top p-2 rounded-3" alt="مكياج">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">مكياج</h5>
-                        </div>
+    <br><br>
+    <div class="main-content container py-4">
+        <div class="row g-3">
+            <!-- فئة المكياج -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="categories-details.html?category=makeup" class="category-card" data-category-id="1">
+                    <img src="https://via.placeholder.com/300x300?text=مكياج" class="category-img" alt="مكياج">
+                    <div class="category-info">
+                        <h5 class="category-title">مكياج</h5>
+                        <p class="category-count">42 منتج</p>
                     </div>
                 </a>
             </div>
 
-            <div class="col">
-                <a href="categories-details.html" class="text-decoration-none text-dark category-link" data-category-id="2">
-                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
-                        <img src="img/2.jpg" class="card-img-top p-2 rounded-3" alt="عناية بالبشرة">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">عناية بالبشرة</h5>
-                        </div>
+            <!-- فئة العناية بالبشرة -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="categories-details.html?category=skincare" class="category-card" data-category-id="2">
+                    <img src="https://via.placeholder.com/300x300?text=عناية+بالبشرة" class="category-img" alt="عناية بالبشرة">
+                    <div class="category-info">
+                        <h5 class="category-title">عناية بالبشرة</h5>
+                        <p class="category-count">36 منتج</p>
                     </div>
                 </a>
             </div>
 
-            <div class="col">
-                <a href="categories-details.html" class="text-decoration-none text-dark category-link" data-category-id="3">
-                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
-                        <img src="img/1.jpg" class="card-img-top p-2 rounded-3" alt="عطور">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">عطور</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col">
-                <a href="#" class="text-decoration-none text-dark category-link" data-category-id="3">
-                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
-                        <img src="img/3.jpg" class="card-img-top p-2 rounded-3" alt="عطور">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">عطور</h5>
-                        </div>
+            <!-- فئة العطور -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="categories-details.html?category=perfumes" class="category-card" data-category-id="3">
+                    <img src="https://via.placeholder.com/300x300?text=عطور" class="category-img" alt="عطور">
+                    <div class="category-info">
+                        <h5 class="category-title">عطور</h5>
+                        <p class="category-count">28 منتج</p>
                     </div>
                 </a>
             </div>
 
-            <div class="col">
-                <a href="#" class="text-decoration-none text-dark category-link" data-category-id="3">
-                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
-                        <img src="img/3.jpg" class="card-img-top p-2 rounded-3" alt="عطور">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">عطور</h5>
-                        </div>
+            <!-- فئة العناية بالشعر -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="categories-details.html?category=haircare" class="category-card" data-category-id="4">
+                    <img src="https://via.placeholder.com/300x300?text=عناية+بالشعر" class="category-img" alt="عناية بالشعر">
+                    <div class="category-info">
+                        <h5 class="category-title">عناية بالشعر</h5>
+                        <p class="category-count">31 منتج</p>
                     </div>
                 </a>
             </div>
-            <div class="col">
-                <a href="#" class="text-decoration-none text-dark category-link" data-category-id="4">
-                    <div class="card h-100 shadow-sm border-0 rounded-3 text-center">
-                        <img src="img/4.jpg" class="card-img-top p-2 rounded-3" alt="عناية بالشعر">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">عناية بالشعر</h5>
-                        </div>
-                        
-                        
+
+            <!-- فئة العناية بالجسم -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="categories-details.html?category=bodycare" class="category-card" data-category-id="5">
+                    <img src="https://via.placeholder.com/300x300?text=عناية+بالجسم" class="category-img" alt="عناية بالجسم">
+                    <div class="category-info">
+                        <h5 class="category-title">عناية بالجسم</h5>
+                        <p class="category-count">25 منتج</p>
                     </div>
                 </a>
+            </div>
+
+            <!-- فئة أدوات المكياج -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="categories-details.html?category=makeup-tools" class="category-card" data-category-id="6">
+                    <img src="https://via.placeholder.com/300x300?text=أدوات+مكياج" class="category-img" alt="أدوات المكياج">
+                    <div class="category-info">
+                        <h5 class="category-title">أدوات المكياج</h5>
+                        <p class="category-count">19 منتج</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- فئة منتجات طبيعية -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="categories-details.html?category=natural" class="category-card" data-category-id="7">
+                    <img src="https://via.placeholder.com/300x300?text=منتجات+طبيعية" class="category-img" alt="منتجات طبيعية">
+                    <div class="category-info">
+                        <h5 class="category-title">منتجات طبيعية</h5>
+                        <p class="category-count">22 منتج</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- فئة منتجات رجالية -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="categories-details.html?category=men" class="category-card" data-category-id="8">
+                    <img src="https://via.placeholder.com/300x300?text=منتجات+رجالية" class="category-img" alt="منتجات رجالية">
+                    <div class="category-info">
+                        <h5 class="category-title">منتجات رجالية</h5>
+                        <p class="category-count">15 منتج</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <!-- معلومات المتجر -->
+                <div class="col-md-4 mb-4">
+                    <h5>Be Pretty</h5>
+                    <p>متجرك الأول لمستحضرات التجميل والعناية بالبشرة.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-snapchat"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <!-- روابط سريعة -->
+                <div class="col-md-2 mb-4">
+                    <h6>روابط سريعة</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="contact.html">اتصل بنا</a></li>
+                        <li><a href="terms.html">الشروط والأحكام</a></li>
+                        <li><a href="blog.html">المدونة</a></li>
+                    </ul>
+                </div>
+                
+                <!-- خدمة العملاء -->
+                <div class="col-md-3 mb-4">
+                    <h6>خدمة العملاء</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="shipping.html">الشحن والتوصيل</a></li>
+                        <li><a href="returns.html">سياسة الإرجاع</a></li>
+                        <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                        <li><a href="support.html">الدعم الفني</a></li>
+                    </ul>
+                </div>
+                
+                <!-- الاشتراك في النشرة البريدية -->
+                <div class="col-md-3 mb-4">
+                    <h6>اشترك في نشرتنا البريدية</h6>
+                    <div class="input-group mb-2">
+                        <input type="email" class="form-control" placeholder="بريدك الإلكتروني">
+                        <button class="btn btn-danger" type="button">اشتراك</button>
+                    </div>
+                    <small>احصلي على آخر العروض والتخفيضات</small>
+                </div>
             </div>
             
+            <hr class="my-4">
+            
+            <!-- حقوق النشر -->
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 Be Pretty. جميع الحقوق محفوظة.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <img src="https://via.placeholder.com/200x30?text=طرق+الدفع+المتاحة" alt="طرق الدفع" class="img-fluid">
+                </div>
             </div>
-    </main>
+        </div>
+    </footer>
 
-    <nav class="bottom-tab-bar fixed-bottom bg-white shadow-lg d-flex justify-content-around align-items-center py-2">
-        <a href="home.html" class="tab-item text-center text-decoration-none">
-            <i class="fas fa-home fa-lg text-muted"></i>
-            <span class="d-block mt-1">الرئيسية</span>
+    <nav class="bottom-tab-bar">
+        <a href="home.html" class="tab-item">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
         </a>
-        <a href="categories.html" class="tab-item text-center text-decoration-none active">
-            <i class="fas fa-th-large fa-lg text-danger"></i>
-            <span class="d-block mt-1 fw-bold text-danger">الفئات</span>
+        <a href="categories.html" class="tab-item active">
+            <i class="fas fa-th-large"></i>
+            <span>الفئات</span>
         </a>
-        <a href="cart.html" class="tab-item text-center text-decoration-none">
-            <i class="fas fa-shopping-cart fa-lg text-muted"></i>
-            <span class="d-block mt-1">السلة</span>
+        <a href="cart.html" class="tab-item">
+            <i class="fas fa-shopping-cart"></i>
+            <span>السلة</span>
+            <span class="notification-badge">3</span>
         </a>
-        <a href="orders.html" class="tab-item text-center text-decoration-none">
-            <i class="fas fa-list-alt fa-lg text-muted"></i>
-            <span class="d-block mt-1">الطلبات</span>
+        <a href="orders.html" class="tab-item">
+            <i class="fas fa-list-alt"></i>
+            <span>الطلبات</span>
         </a>
-        <a href="profile.html" class="tab-item text-center text-decoration-none">
-            <i class="fas fa-user fa-lg text-muted"></i>
-            <span class="d-block mt-1">حسابي</span>
+        <a href="profile.html" class="tab-item">
+            <i class="fas fa-user"></i>
+            <span>حسابي</span>
         </a>
     </nav>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!--   <script>
+    <script>
         $(document).ready(function() {
-            // Handle category link click
-            $('.category-link').on('click', function(e) {
+            // إدارة النقر على الفئات
+            $('.category-card').on('click', function(e) {
                 e.preventDefault();
                 const categoryId = $(this).data('category-id');
-                // Here, you would navigate to the category details page
-                // For example:
-                // window.location.href = `category-details.html?id=${categoryId}`;
-                alert(`جارٍ الانتقال إلى صفحة فئة رقم ${categoryId}...`);
+                const categoryName = $(this).find('.category-title').text();
+                
+                // هنا يمكنك إما:
+                // 1. الانتقال إلى صفحة تفاصيل الفئة مع تمرير معرف الفئة
+                window.location.href = `categories-details.html?category=${categoryId}&name=${encodeURIComponent(categoryName)}`;
+                
+                // أو 2. عرض رسالة تجريبية (للتجربة فقط)
+                // alert(`جارٍ الانتقال إلى صفحة ${categoryName}...`);
+            });
+            
+            // إدارة شريط البحث
+            $('.search-input').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                
+                $('.category-card').each(function() {
+                    const categoryName = $(this).find('.category-title').text().toLowerCase();
+                    
+                    if (categoryName.includes(searchTerm)) {
+                        $(this).parent().show();
+                    } else {
+                        $(this).parent().hide();
+                    }
+                });
             });
         });
-    </script -->>
+    </script>
 </body>
 </html>
