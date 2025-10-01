@@ -4,282 +4,906 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الدفع | Be Pretty</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary-color: #ff3366;
+            --secondary-color: #ff3366;
+            --accent-color: #ff3366;
+            --dark-color: #2c2c54;
+            --light-color: #f7f7f7;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding-bottom: 70px;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-color), #a56cc1);
+            color: white;
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+        }
+        
+        .icon-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .icon-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .main-content {
+            margin-top: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        
+        .payment-option {
+            transition: all 0.3s;
+            border: 2px solid #dee2e6 !important;
+        }
+        
+        .payment-option.active {
+            border-color: var(--primary-color) !important;
+            background-color: rgba(255, 51, 102, 0.05) !important;
+        }
+        
+        .bank-account {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .bank-account:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .bank-account.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 51, 102, 0.05);
+        }
+        
+        .confirmation-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .receipt-upload {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .receipt-upload:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 51, 102, 0.05);
+        }
+        
+        .receipt-preview {
+            max-width: 200px;
+            max-height: 200px;
+            display: none;
+            margin: 0 auto;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .tab-item.active {
+            color: var(--primary-color);
+        }
+        
+        .tab-item i {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+        
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+        
+        footer h5, footer h6 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        footer ul {
+            padding: 0;
+            list-style: none;
+        }
+        
+        footer ul li {
+            margin-bottom: 8px;
+        }
+        
+        footer a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        footer a:hover {
+            color: var(--primary-color);
+        }
+        
+        .social-links a {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin-left: 10px;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary-color);
+        }
+        
+        .user-data-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .delivery-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .delivery-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .delivery-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 51, 102, 0.05);
+        }
+        
+        .delivery-cost {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-    <header class="bg-white shadow-sm p-3 fixed-top">
-        <div class="d-flex justify-content-between align-items-center">
-            <a href="cart.html" class="btn"><i class="fas fa-arrow-right fa-lg text-dark"></i></a>
+    <!-- الهيدر -->
+    <header class="main-header">
+        <div class="header-top">
+            <a href="cart.html" class="icon-btn"><i class="fas fa-arrow-right"></i></a>
             <h5 class="mb-0 fw-bold">الدفع</h5>
-            <span></span>
+            <div class="header-icons">
+                <button class="icon-btn"><i class="fas fa-search"></i></button>
+            </div>
         </div>
     </header>
 
-    <main class="container-fluid py-4" style="margin-top: 60px; margin-bottom: 70px;">
-
-        <section class="order-summary-section bg-white p-4 rounded-3 shadow-sm mb-4">
-            <h5 class="fw-bold mb-3">ملخص الطلب</h5>
-            <div id="order-items" class="d-flex flex-column gap-3 mb-3">
-                <div class="d-flex align-items-center border-bottom pb-2">
-                    <img src="img/1.jpg" class="img-fluid rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                    <div class="flex-grow-1">
-                        <p class="mb-0 fw-bold">منتج العناية بالبشرة <small class="text-muted">(x1)</small></p>
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content container-fluid py-4">
+        
+        <!-- شاشة الدفع الرئيسية -->
+        <div id="payment-screen">
+            <!-- بيانات المستخدم العامة -->
+            <section class="user-data-section">
+                <h5 class="fw-bold mb-3">البيانات العامة</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="full-name" class="form-label">الاسم الكامل</label>
+                        <input type="text" class="form-control" id="full-name" value="سارة أحمد محمد" required>
                     </div>
-                    <span class="fw-bold">150 ر.س</span>
-                </div>
-                <div class="d-flex align-items-center border-bottom pb-2">
-                    <img src="img/2.jpg" class="img-fluid rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                    <div class="flex-grow-1">
-                        <p class="mb-0 fw-bold">مجموعة المكياج <small class="text-muted">(x1)</small></p>
+                    <div class="col-md-6 mb-3">
+                        <label for="phone" class="form-label">رقم الهاتف</label>
+                        <input type="tel" class="form-control" id="phone" value="+966 50 123 4567" required>
                     </div>
-                    <span class="fw-bold">250 ر.س</span>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">المجموع الفرعي</span>
-                <span class="fw-bold"><span id="subtotal">400</span> ر.س</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">الخصم</span>
-                <span class="fw-bold text-success">- <span id="discount">0</span> ر.س</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">تكاليف الشحن</span>
-                <span class="fw-bold"><span id="shipping">15</span> ر.س</span>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between fw-bold fs-5">
-                <span>المجموع الكلي</span>
-                <span class="text-danger"><span id="total-price">415</span> ر.س</span>
-            </div>
-        </section>
-
-        <section class="coupon-section mb-4">
-            <div class="input-group">
-                <input type="text" id="coupon-code" class="form-control rounded-start" placeholder="أدخل رمز القسيمة">
-                <button class="btn btn-outline-danger" type="button" id="apply-coupon-btn">تطبيق</button>
-            </div>
-        </section>
-
-        <section class="payment-section bg-white p-4 rounded-3 shadow-sm mb-4">
-            <h5 class="fw-bold mb-3">طريقة الدفع</h5>
-            <div class="d-flex flex-column gap-3">
-                <label class="btn btn-outline-danger p-3 rounded-3 text-start payment-option active" data-method="cash">
-                    <input type="radio" name="payment-method" class="d-none" checked>
-                    <i class="fas fa-wallet fa-lg me-3"></i>
-                    الدفع عند الاستلام
-                </label>
-                <label class="btn btn-outline-danger p-3 rounded-3 text-start payment-option" data-method="bank">
-                    <input type="radio" name="payment-method" class="d-none">
-                    <i class="fas fa-university fa-lg me-3"></i>
-                    الدفع البنكي
-                </label>
-                <label class="btn btn-outline-danger p-3 rounded-3 text-start payment-option" data-method="online">
-                    <input type="radio" name="payment-method" class="d-none">
-                    <i class="fas fa-credit-card fa-lg me-3"></i>
-                    بطاقة ائتمانية (قريباً)
-                </label>
-            </div>
-        </section>
-
-        <form id="payment-form">
-            <section id="cash-form" class="bg-white p-4 rounded-3 shadow-sm mb-4">
-                <h5 class="fw-bold mb-3">بيانات التوصيل</h5>
-                <div class="mb-3">
-                    <label for="full-name-cash" class="form-label">الاسم الكامل</label>
-                    <input type="text" class="form-control" id="full-name-cash" required>
-                </div>
-                <div class="mb-3">
-                    <label for="phone-cash" class="form-label">رقم الهاتف</label>
-                    <input type="tel" class="form-control" id="phone-cash" required>
-                </div>
-                <div class="mb-3">
-                    <label for="address-cash" class="form-label">العنوان الكامل</label>
-                    <textarea class="form-control" id="address-cash" rows="3" required></textarea>
+                    <div class="col-12 mb-3">
+                        <label for="email" class="form-label">البريد الإلكتروني</label>
+                        <input type="email" class="form-control" id="email" value="sara.ahmed@example.com" required>
+                    </div>
                 </div>
             </section>
 
-            <section id="bank-form" class="bg-white p-4 rounded-3 shadow-sm mb-4 d-none">
-                <h5 class="fw-bold mb-3">بيانات التحويل البنكي</h5>
-                <div class="mb-3">
-                    <label for="bank-select" class="form-label">اختر البنك</label>
-                    <select class="form-select" id="bank-select">
-                        <option value="yemeni-bank">البنك اليمني</option>
-                        <option value="saudi-bank">البنك السعودي</option>
-                        <option value="dolar-bank">حساب بالدولار</option>
-                    </select>
-                </div>
-                <div id="bank-info" class="text-center mt-4">
+            <!-- خيارات التوصيل -->
+            <section class="user-data-section">
+                <h5 class="fw-bold mb-3">خيارات التوصيل</h5>
+                <div class="delivery-options">
+                    <div class="delivery-option selected" data-type="standard">
+                        <i class="fas fa-truck fa-2x mb-2"></i>
+                        <p class="mb-1 fw-bold">التوصيل العادي</p>
+                        <p class="delivery-cost">15 ر.س</p>
+                        <small class="text-muted">3-5 أيام عمل</small>
                     </div>
+                    <div class="delivery-option" data-type="express">
+                        <i class="fas fa-shipping-fast fa-2x mb-2"></i>
+                        <p class="mb-1 fw-bold">التوصيل السريع</p>
+                        <p class="delivery-cost">30 ر.س</p>
+                        <small class="text-muted">1-2 أيام عمل</small>
+                    </div>
+                    <div class="delivery-option" data-type="pickup">
+                        <i class="fas fa-store fa-2x mb-2"></i>
+                        <p class="mb-1 fw-bold">الاستلام من المتجر</p>
+                        <p class="delivery-cost">مجاني</p>
+                        <small class="text-muted">متاح فوراً</small>
+                    </div>
+                </div>
+                
+                <!-- عنوان التوصيل -->
+                <div id="delivery-address-section">
+                    <div class="mb-3">
+                        <label for="address" class="form-label">عنوان التوصيل</label>
+                        <textarea class="form-control" id="address" rows="3" required>حي العليا، شارع الملك فهد، الرياض، المملكة العربية السعودية</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="city" class="form-label">المدينة</label>
+                            <input type="text" class="form-control" id="city" value="الرياض" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="postal-code" class="form-label">الرمز البريدي</label>
+                            <input type="text" class="form-control" id="postal-code" value="12345" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- معلومات الاستلام من المتجر -->
+                <div id="pickup-info" class="d-none">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle me-2"></i>معلومات الاستلام</h6>
+                        <p class="mb-0">يمكنك استلام طلبك من فرعنا الرئيسي في:<br>
+                        <strong>حي العليا، مركز التسوق، الطابق الثاني</strong><br>
+                        <strong>ساعات العمل:</strong> 9 صباحاً - 11 مساءً</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ملخص الطلب -->
+            <section class="order-summary-section order-card p-4">
+                <h5 class="fw-bold mb-3">ملخص الطلب</h5>
+                <div id="order-items" class="d-flex flex-column gap-3 mb-3">
+                    <div class="d-flex align-items-center border-bottom pb-2">
+                        <img src="img/1.jpg" class="img-fluid rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                        <div class="flex-grow-1">
+                            <p class="mb-0 fw-bold">منتج العناية بالبشرة <small class="text-muted">(x1)</small></p>
+                        </div>
+                        <span class="fw-bold">150 ر.س</span>
+                    </div>
+                    <div class="d-flex align-items-center border-bottom pb-2">
+                        <img src="img/2.jpg" class="img-fluid rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                        <div class="flex-grow-1">
+                            <p class="mb-0 fw-bold">مجموعة المكياج <small class="text-muted">(x1)</small></p>
+                        </div>
+                        <span class="fw-bold">250 ر.س</span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">المجموع الفرعي</span>
+                    <span class="fw-bold"><span id="subtotal">400</span> ر.س</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">الخصم</span>
+                    <span class="fw-bold text-success">- <span id="discount">0</span> ر.س</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">تكاليف الشحن</span>
+                    <span class="fw-bold"><span id="shipping">15</span> ر.س</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>المجموع الكلي</span>
+                    <span class="text-danger"><span id="total-price">415</span> ر.س</span>
+                </div>
+            </section>
+
+            <!-- القسيمة -->
+            <section class="coupon-section mb-4">
+                <div class="input-group">
+                    <input type="text" id="coupon-code" class="form-control rounded-start" placeholder="أدخل رمز القسيمة">
+                    <button class="btn btn-outline-danger" type="button" id="apply-coupon-btn">تطبيق</button>
+                </div>
+            </section>
+
+            <!-- طرق الدفع -->
+            <section class="payment-section order-card p-4 mb-4">
+                <h5 class="fw-bold mb-3">طريقة الدفع</h5>
+                <div class="d-flex flex-column gap-3">
+                    <label class="btn btn-outline-danger p-3 rounded-3 text-start payment-option active" data-method="cash">
+                        <input type="radio" name="payment-method" class="d-none" checked>
+                        <i class="fas fa-wallet fa-lg me-3"></i>
+                        الدفع عند الاستلام
+                    </label>
+                    <label class="btn btn-outline-danger p-3 rounded-3 text-start payment-option" data-method="bank">
+                        <input type="radio" name="payment-method" class="d-none">
+                        <i class="fas fa-university fa-lg me-3"></i>
+                        الدفع البنكي
+                    </label>
+                </div>
+            </section>
+
+            <!-- نموذج التحويل البنكي -->
+            <section id="bank-form" class="order-card p-4 mb-4 d-none">
+                <h5 class="fw-bold mb-3">التحويل البنكي</h5>
+                
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">اختر الحساب البنكي:</h6>
+                    <div class="bank-accounts-container">
+                        <div class="bank-account" data-bank="riyadh-bank" data-currency="ر.س">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="fw-bold mb-1">البنك السعودي</h6>
+                                    <p class="mb-1 text-muted">الحساب: SA03 8000 0000 6080 1016 7513</p>
+                                    <p class="mb-0">اسم صاحب الحساب: Be Pretty Co.</p>
+                                </div>
+                                      <button class="btn btn-outline-primary btn-sm copy-btn" data-account="SA0380000000608010167519">
+                <i class="fas fa-copy me-1"></i>نسخ
+            </button>
+                                <span class="badge bg-success">ر.س</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bank-account" data-bank="yemen-bank" data-currency="ر.ي">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="fw-bold mb-1">البنك اليمني</h6>
+                                    <p class="mb-1 text-muted">الحساب: YE03 8000 0000 6080 1016 7513</p>
+                                    <p class="mb-0">اسم صاحب الحساب: Be Pretty Co.</p>
+                                </div>
+                                      <button class="btn btn-outline-primary btn-sm copy-btn" data-account="SA0380000000608010167519">
+                <i class="fas fa-copy me-1"></i>نسخ
+            </button>
+                                <span class="badge bg-warning">ر.ي</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bank-account" data-bank="dollar-bank" data-currency="$">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="fw-bold mb-1">بنك الدولار</h6>
+                                    <p class="mb-1 text-muted">الحساب: US03 8000 0000 6080 1016 7513</p>
+                                    <p class="mb-0">اسم صاحب الحساب: Be Pretty Co.</p>
+                                </div>
+                                      <button class="btn btn-outline-primary btn-sm copy-btn" data-account="SA0380000000608010167519">
+                <i class="fas fa-copy me-1"></i>نسخ
+            </button>
+                                <span class="badge bg-info">$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label for="transfer-name" class="form-label">اسم المحول</label>
                     <input type="text" class="form-control" id="transfer-name" required>
                 </div>
+                
+                <div class="mb-3">
+                    <label for="transfer-date" class="form-label">تاريخ التحويل</label>
+                    <input type="date" class="form-control" id="transfer-date" required>
+                </div>
             </section>
             
-            <button type="submit" class="btn btn-danger btn-lg w-100 rounded-pill fw-bold">إتمام الدفع</button>
-        </form>
-    </main>
+            <button id="complete-payment-btn" class="btn btn-danger btn-lg w-100 rounded-pill fw-bold">إتمام الدفع</button>
+        </div>
 
-    <nav class="bottom-tab-bar fixed-bottom bg-white shadow-lg d-flex justify-content-around align-items-center py-2">
-        <a href="home.html" class="tab-item text-center text-decoration-none">
-            <i class="fas fa-home fa-lg text-muted"></i>
-            <span class="d-block mt-1">الرئيسية</span>
+        <!-- شاشة تأكيد الطلب -->
+        <div id="confirmation-screen" class="d-none">
+            <div class="confirmation-card text-center">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                    <h4 class="fw-bold text-success">تم تأكيد طلبك بنجاح!</h4>
+                    <p class="text-muted">رقم الطلب: #<span id="order-number">1542</span></p>
+                </div>
+
+                <div id="bank-receipt-section" class="d-none">
+                    <h5 class="fw-bold mb-3">تحميل إيصال التحويل</h5>
+                    <div class="receipt-upload mb-3" id="receipt-dropzone">
+                        <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                        <p class="mb-1">اسحب وأفلت صورة الإيصال هنا</p>
+                        <p class="text-muted small">أو انقر لاختيار الملف</p>
+                        <input type="file" id="receipt-file" accept="image/*" class="d-none">
+                        <img id="receipt-preview" class="receipt-preview img-fluid mt-3">
+                    </div>
+                    <button id="confirm-order-btn" class="btn btn-success btn-lg w-100 rounded-pill fw-bold">تأكيد الطلب</button>
+                </div>
+
+                <div id="cash-confirmation" class="d-none">
+                    <p class="mb-4">سيتم توصيل طلبك خلال 2-3 أيام عمل</p>
+                    <button id="view-invoice-btn" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold">عرض الفاتورة</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- شاشة الفاتورة -->
+        <div id="invoice-screen" class="d-none">
+            <div class="confirmation-card">
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold">فاتورة الشراء</h4>
+                    <p class="text-muted">رقم الفاتورة: #<span id="invoice-number">1542</span></p>
+                    <p class="text-muted">تاريخ الطلب: <span id="invoice-date">25 سبتمبر 2025</span></p>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold">بيانات العميل:</h6>
+                    <p id="invoice-customer-name">سارة أحمد محمد</p>
+                    <p id="invoice-customer-phone">+966 50 123 4567</p>
+                    <p id="invoice-customer-address">حي العليا، شارع الملك فهد، الرياض، المملكة العربية السعودية</p>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold">تفاصيل الطلب:</h6>
+                    <div id="invoice-items"></div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold">المجموع:</h6>
+                    <div class="d-flex justify-content-between">
+                        <span>المجموع الفرعي:</span>
+                        <span id="invoice-subtotal">400 ر.س</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>الشحن:</span>
+                        <span id="invoice-shipping">15 ر.س</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>الخصم:</span>
+                        <span id="invoice-discount">0 ر.س</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>المجموع الكلي:</span>
+                        <span id="invoice-total">415 ر.س</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold">طريقة الدفع:</h6>
+                    <p id="invoice-payment-method">الدفع عند الاستلام</p>
+                </div>
+
+                <button id="back-to-home-btn" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold">العودة للرئيسية</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- الفوتر -->
+    <footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>Be Pretty</h5>
+                    <p>متجرك الأول لمستحضرات التجميل والعناية بالبشرة.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-snapchat"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-md-2 mb-4">
+                    <h6>روابط سريعة</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="contact.html">اتصل بنا</a></li>
+                        <li><a href="terms.html">الشروط والأحكام</a></li>
+                        <li><a href="blog.html">المدونة</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <h6>خدمة العملاء</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="shipping.html">الشحن والتوصيل</a></li>
+                        <li><a href="returns.html">سياسة الإرجاع</a></li>
+                        <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                        <li><a href="support.html">الدعم الفني</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <h6>اشترك في نشرتنا البريدية</h6>
+                    <div class="input-group mb-2">
+                        <input type="email" class="form-control" placeholder="بريدك الإلكتروني">
+                        <button class="btn btn-danger" type="button">اشتراك</button>
+                    </div>
+                    <small>احصلي على آخر العروض والتخفيضات</small>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 Be Pretty. جميع الحقوق محفوظة.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <img src="https://via.placeholder.com/200x30?text=طرق+الدفع+المتاحة" alt="طرق الدفع" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-tab-bar">
+        <a href="home.html" class="tab-item">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
         </a>
-        <a href="categories.html" class="tab-item text-center text-decoration-none">
-            <i class="fas fa-th-large fa-lg text-muted"></i>
-            <span class="d-block mt-1">الفئات</span>
+        <a href="categories.html" class="tab-item">
+            <i class="fas fa-th-large"></i>
+            <span>الفئات</span>
         </a>
-        <a href="cart.html" class="tab-item text-center text-decoration-none active">
-            <i class="fas fa-shopping-cart fa-lg text-danger"></i>
-            <span class="d-block mt-1 fw-bold text-danger">السلة</span>
+        <a href="cart.html" class="tab-item active">
+            <i class="fas fa-shopping-cart"></i>
+            <span>السلة</span>
         </a>
-        <a href="orders.html" class="tab-item text-center text-decoration-none">
-            <i class="fas fa-list-alt fa-lg text-muted"></i>
-            <span class="d-block mt-1">الطلبات</span>
+        <a href="orders.html" class="tab-item">
+            <i class="fas fa-list-alt"></i>
+            <span>الطلبات</span>
         </a>
-        <a href="profile.html" class="tab-item text-center text-decoration-none">
-            <i class="fas fa-user fa-lg text-muted"></i>
-            <span class="d-block mt-1">حسابي</span>
+        <a href="profile.html" class="tab-item">
+            <i class="fas fa-user"></i>
+            <span>حسابي</span>
         </a>
     </nav>
-<script>
-    
-    
-    $(document).ready(function() {
-    // 1. Data simulation (This would be fetched from a backend)
-    const orderDetails = {
-        items: [
-            { id: 1, name: 'منتج العناية بالبشرة', quantity: 1, price: 150, image: 'product1.jpg' },
-            { id: 2, name: 'مجموعة المكياج', quantity: 1, price: 250, image: 'product2.jpg' }
-        ],
-        subtotal: 400,
-        shipping: 15,
-        discount: 0
-    };
 
-    const bankDetails = {
-        'yemeni-bank': {
-            qrCode: 'qr-yemeni.png',
-            accountNumber: '1234567890',
-            currency: 'ر.ي'
-        },
-        'saudi-bank': {
-            qrCode: 'qr-saudi.png',
-            accountNumber: '9876543210',
-            currency: 'ر.س'
-        },
-        'dolar-bank': {
-            qrCode: 'qr-dolar.png',
-            accountNumber: '1122334455',
-            currency: '$'
-        }
-    };
-
-    // 2. Function to update UI with order details
-    function renderOrderSummary() {
-        let itemsHtml = '';
-        orderDetails.items.forEach(item => {
-            itemsHtml += `
-                <div class="d-flex align-items-center border-bottom pb-2">
-                    <img src="${item.image}" class="img-fluid rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                    <div class="flex-grow-1">
-                        <p class="mb-0 fw-bold">${item.name} <small class="text-muted">(x${item.quantity})</small></p>
-                    </div>
-                    <span class="fw-bold">${item.price * item.quantity} ر.س</span>
-                </div>
-            `;
-        });
-        $('#order-items').html(itemsHtml);
-        
-        // Update totals
-        updateTotals();
-    }
-
-    // 3. Function to update totals
-    function updateTotals() {
-        const total = orderDetails.subtotal + orderDetails.shipping - orderDetails.discount;
-        $('#subtotal').text(orderDetails.subtotal);
-        $('#discount').text(orderDetails.discount);
-        $('#shipping').text(orderDetails.shipping);
-        $('#total-price').text(total);
-    }
-
-    // 4. Handle payment method selection
-    $('.payment-option').on('click', function() {
-        $('.payment-option').removeClass('active');
-        $(this).addClass('active');
-
-        const method = $(this).data('method');
-        $('#cash-form, #bank-form').addClass('d-none');
-        if (method === 'cash') {
-            $('#cash-form').removeClass('d-none');
-        } else if (method === 'bank') {
-            $('#bank-form').removeClass('d-none');
-            // Trigger bank select change to show initial bank info
-            $('#bank-select').trigger('change');
-        } else {
-            // For future methods like credit card
-            alert('طريقة الدفع هذه ستكون متاحة قريباً.');
-        }
-    });
-
-    // 5. Handle bank selection change
-    $('#bank-select').on('change', function() {
-        const selectedBank = $(this).val();
-        const details = bankDetails[selectedBank];
-        const bankHtml = `
-            <img src="${details.qrCode}" class="img-fluid mb-3" style="width: 150px; height: 150px;">
-            <p class="mb-1 fw-bold">رقم الحساب: <span id="account-number">${details.accountNumber}</span></p>
-            <p class="mb-0 text-muted">العملة: ${details.currency}</p>
-            <button class="btn btn-sm btn-outline-secondary mt-2 copy-btn" data-clipboard-text="${details.accountNumber}">
-                <i class="fas fa-copy me-2"></i>نسخ رقم الحساب
-            </button>
-        `;
-        $('#bank-info').html(bankHtml);
-    });
-
-    // 6. Handle coupon code application
-    $('#apply-coupon-btn').on('click', function() {
-        const couponCode = $('#coupon-code').val().trim();
-        if (couponCode === 'DISCOUNT20') {
-            orderDetails.discount = 20;
-            updateTotals();
-            alert('تم تطبيق قسيمة الخصم بنجاح! تم خصم 20 ر.س.');
-        } else {
-            orderDetails.discount = 0;
-            updateTotals();
-            alert('رمز القسيمة غير صالح.');
-        }
-    });
-
-    // 7. Handle form submission
-    $('#payment-form').on('submit', function(e) {
-        e.preventDefault();
-        // Here you would send the data to a backend server
-        alert('تم إرسال طلبك بنجاح! سيتم مراجعته.');
-    });
-
-    // 8. Handle copy button click
-    $(document).on('click', '.copy-btn', function() {
-        const textToCopy = $(this).data('clipboard-text');
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            alert('تم نسخ رقم الحساب بنجاح.');
-        });
-    });
-
-    // Initial render
-    renderOrderSummary();
-});
-
-
-</script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // وظيفة نسخ أرقام الحسابات البنكية
+document.addEventListener('DOMContentLoaded', function() {
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const accountNumber = this.getAttribute('data-account');
+            
+            // استخدام Clipboard API للنسخ
+            navigator.clipboard.writeText(accountNumber).then(() => {
+                // إظهار رسالة نجاح
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-1"></i>تم النسخ!';
+                this.classList.remove('btn-outline-primary');
+                this.classList.add('btn-success');
+                
+                // العودة إلى الحالة الأصلية بعد ثانيتين
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-primary');
+                }, 2000);
+                
+            }).catch(err => {
+                // الطريقة البديلة للنسخ
+                const tempInput = document.createElement('input');
+                tempInput.value = accountNumber;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                // إظهار رسالة نجاح
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-1"></i>تم النسخ!';
+                this.classList.remove('btn-outline-primary');
+                this.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-primary');
+                }, 2000);
+            });
+        });
+    });
+});
+        $(document).ready(function() {
+            let selectedPaymentMethod = 'cash';
+            let selectedBankAccount = null;
+            let selectedDeliveryType = 'standard';
+            let deliveryCost = 15;
+
+            // بيانات المحاكاة
+            const orderDetails = {
+                items: [
+                    { id: 1, name: 'منتج العناية بالبشرة', quantity: 1, price: 150, image: 'img/1.jpg' },
+                    { id: 2, name: 'مجموعة المكياج', quantity: 1, price: 250, image: 'img/2.jpg' }
+                ],
+                subtotal: 400,
+                shipping: 15,
+                discount: 0
+            };
+
+            // تحديث طريقة الدفع
+            $('.payment-option').on('click', function() {
+                $('.payment-option').removeClass('active');
+                $(this).addClass('active');
+                selectedPaymentMethod = $(this).data('method');
+                
+                $('#bank-form').addClass('d-none');
+                if (selectedPaymentMethod === 'bank') {
+                    $('#bank-form').removeClass('d-none');
+                }
+            });
+
+            // اختيار الحساب البنكي
+            $('.bank-account').on('click', function() {
+                $('.bank-account').removeClass('selected');
+                $(this).addClass('selected');
+                selectedBankAccount = $(this).data('bank');
+            });
+
+            // اختيار طريقة التوصيل
+            $('.delivery-option').on('click', function() {
+                $('.delivery-option').removeClass('selected');
+                $(this).addClass('selected');
+                selectedDeliveryType = $(this).data('type');
+                
+                // تحديث تكلفة الشحن وعرض/إخفاء الأقسام المناسبة
+                if (selectedDeliveryType === 'standard') {
+                    deliveryCost = 15;
+                    $('#delivery-address-section').removeClass('d-none');
+                    $('#pickup-info').addClass('d-none');
+                } else if (selectedDeliveryType === 'express') {
+                    deliveryCost = 30;
+                    $('#delivery-address-section').removeClass('d-none');
+                    $('#pickup-info').addClass('d-none');
+                } else if (selectedDeliveryType === 'pickup') {
+                    deliveryCost = 0;
+                    $('#delivery-address-section').addClass('d-none');
+                    $('#pickup-info').removeClass('d-none');
+                }
+                
+                updateTotals();
+            });
+
+            // تطبيق القسيمة
+            $('#apply-coupon-btn').on('click', function() {
+                const couponCode = $('#coupon-code').val().trim();
+                if (couponCode === 'DISCOUNT20') {
+                    orderDetails.discount = 20;
+                    updateTotals();
+                    alert('تم تطبيق قسيمة الخصم بنجاح! تم خصم 20 ر.س.');
+                } else {
+                    orderDetails.discount = 0;
+                    updateTotals();
+                    alert('رمز القسيمة غير صالح.');
+                }
+            });
+
+            // إتمام الدفع
+            $('#complete-payment-btn').on('click', function() {
+                // التحقق من صحة البيانات
+                if (!validateForm()) {
+                    return;
+                }
+                
+                if (selectedPaymentMethod === 'bank' && !selectedBankAccount) {
+                    alert('يرجى اختيار حساب بنكي');
+                    return;
+                }
+
+                // الانتقال لشاشة التأكيد
+                $('#payment-screen').addClass('d-none');
+                $('#confirmation-screen').removeClass('d-none');
+
+                if (selectedPaymentMethod === 'bank') {
+                    $('#bank-receipt-section').removeClass('d-none');
+                } else {
+                    $('#cash-confirmation').removeClass('d-none');
+                }
+            });
+
+            // تحميل الإيصال
+            $('#receipt-dropzone').on('click', function() {
+                $('#receipt-file').click();
+            });
+
+            $('#receipt-file').on('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#receipt-preview').attr('src', e.target.result).show();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // تأكيد الطلب مع الإيصال
+            $('#confirm-order-btn').on('click', function() {
+                if (!$('#receipt-file')[0].files[0]) {
+                    alert('يرجى تحميل صورة الإيصال');
+                    return;
+                }
+                showInvoice();
+            });
+
+            // عرض الفاتورة للدفع عند الاستلام
+            $('#view-invoice-btn').on('click', function() {
+                showInvoice();
+            });
+
+            // العودة للرئيسية
+            $('#back-to-home-btn').on('click', function() {
+                window.location.href = 'home.html';
+            });
+
+            function validateForm() {
+                const fullName = $('#full-name').val().trim();
+                const phone = $('#phone').val().trim();
+                const email = $('#email').val().trim();
+                
+                if (!fullName) {
+                    alert('يرجى إدخال الاسم الكامل');
+                    return false;
+                }
+                
+                if (!phone) {
+                    alert('يرجى إدخال رقم الهاتف');
+                    return false;
+                }
+                
+                if (!email) {
+                    alert('يرجى إدخال البريد الإلكتروني');
+                    return false;
+                }
+                
+                if (selectedDeliveryType !== 'pickup') {
+                    const address = $('#address').val().trim();
+                    const city = $('#city').val().trim();
+                    
+                    if (!address) {
+                        alert('يرجى إدخال عنوان التوصيل');
+                        return false;
+                    }
+                    
+                    if (!city) {
+                        alert('يرجى إدخال المدينة');
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+
+            function updateTotals() {
+                orderDetails.shipping = deliveryCost;
+                const total = orderDetails.subtotal + orderDetails.shipping - orderDetails.discount;
+                $('#subtotal').text(orderDetails.subtotal);
+                $('#discount').text(orderDetails.discount);
+                $('#shipping').text(orderDetails.shipping);
+                $('#total-price').text(total);
+            }
+
+            function showInvoice() {
+                $('#confirmation-screen').addClass('d-none');
+                $('#invoice-screen').removeClass('d-none');
+                
+                // تعبئة بيانات الفاتورة
+                $('#invoice-customer-name').text($('#full-name').val());
+                $('#invoice-customer-phone').text($('#phone').val());
+                $('#invoice-customer-address').text($('#address').val());
+                
+                $('#invoice-items').empty();
+                orderDetails.items.forEach(item => {
+                    $('#invoice-items').append(`
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span>${item.name} (x${item.quantity})</span>
+                            <span>${item.price * item.quantity} ر.س</span>
+                        </div>
+                    `);
+                });
+                
+                $('#invoice-subtotal').text(orderDetails.subtotal + ' ر.س');
+                $('#invoice-shipping').text(orderDetails.shipping + ' ر.س');
+                $('#invoice-discount').text(orderDetails.discount + ' ر.س');
+                $('#invoice-total').text((orderDetails.subtotal + orderDetails.shipping - orderDetails.discount) + ' ر.س');
+                
+                // طريقة الدفع
+                if (selectedPaymentMethod === 'cash') {
+                    $('#invoice-payment-method').text('الدفع عند الاستلام');
+                } else {
+                    $('#invoice-payment-method').text('التحويل البنكي');
+                }
+                
+                // تاريخ اليوم
+                const today = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                $('#invoice-date').text(today.toLocaleDateString('ar-SA', options));
+            }
+
+            // التهيئة الأولية
+            updateTotals();
+        });
+    </script>
 </body>
 </html>
