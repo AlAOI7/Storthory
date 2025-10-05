@@ -1,0 +1,739 @@
+-- 1. جدول المستخدمين والصلاحيات
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    user_type ENUM('customer', 'admin', 'staff') DEFAULT 'customer',
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    phone VARCHAR(20),
+    date_of_birth DATE,
+    registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_login DATETIME,
+    status ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+    email_verified BOOLEAN DEFAULT FALSE,
+    phone_verified BOOLEAN DEFAULT FALSE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 2. جدول الصلاحيات
+CREATE TABLE permissions (
+    permission_id INT AUTO_INCREMENT PRIMARY KEY,
+    permission_name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    module VARCHAR(50)
+);
+
+-- 3. جدول أدوار المستخدمين
+CREATE TABLE roles (
+    role_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT,
+    created_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 4. جدول ربط الصلاحيات بالأدوار
+CREATE TABLE role_permissions (
+    role_permission_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_id INT NOT NULL,
+    permission_id INT NOT NULL,
+    granted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    granted_by INT,
+    FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE,
+    FOREIGN KEY (permission_id) REFERENCES permissions(permission_id) ON DELETE CASCADE,
+    FOREIGN KEY (granted_by) REFERENCES users(user_id),
+    UNIQUE KEY unique_role_permission (role_id, permission_id)
+);
+
+-- 5. جدول ربط المستخدمين بالأدوار
+CREATE TABLE user_roles (
+    user_role_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    assigned_by INT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE,
+    FOREIGN KEY (assigned_by) REFERENCES users(user_id),
+    UNIQUE KEY unique_user_role (user_id, role_id)
+);
+
+-- 6. جدول العناوين
+CREATE TABLE user_addresses (
+    address_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    address_type ENUM('home', 'work', 'billing', 'shipping') DEFAULT 'home',
+    recipient_name VARCHAR(100),
+    phone VARCHAR(20),
+    country VARCHAR(50),
+    city VARCHAR(50),
+    district VARCHAR(50),
+    street_address TEXT,
+    building_number VARCHAR(20),
+    apartment_number VARCHAR(20),
+    postal_code VARCHAR(20),
+    is_default BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- 7. جدول طرق الدفع
+CREATE TABLE payment_methods (
+    payment_method_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    method_type ENUM('credit_card', 'debit_card', 'bank_transfer', 'digital_wallet') NOT NULL,
+    provider VARCHAR(50),
+    account_number VARCHAR(255), -- encrypted
+    expiry_date DATE,
+    is_default BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- 8. جدول الفئات
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(100) NOT NULL,
+    category_slug VARCHAR(120) UNIQUE,
+    description TEXT,
+    parent_category_id INT NULL,
+    image_url VARCHAR(255),
+    display_order INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    meta_title VARCHAR(60),
+    meta_description VARCHAR(160),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_category_id) REFERENCES categories(category_id)
+);
+
+-- 9. جدول العلامات التجارية
+CREATE TABLE brands (
+    brand_id INT AUTO_INCREMENT PRIMARY KEY,
+    brand_name VARCHAR(100) NOT NULL UNIQUE,
+    brand_slug VARCHAR(120) UNIQUE,
+    description TEXT,
+    logo_url VARCHAR(255),
+    website_url VARCHAR(255),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 10. جدول الموردين
+CREATE TABLE suppliers (
+    supplier_id INT AUTO_INCREMENT PRIMARY KEY,
+    supplier_name VARCHAR(100) NOT NULL,
+    contact_person VARCHAR(100),
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    address TEXT,
+    tax_number VARCHAR(50),
+    current_balance DECIMAL(15,2) DEFAULT 0.00,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 11. جدول المنتجات الرئيسي
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    product_slug VARCHAR(300) UNIQUE,
+    description LONGTEXT,
+    short_description TEXT,
+    sku VARCHAR(100) UNIQUE,
+    barcode VARCHAR(100),
+    category_id INT NOT NULL,
+    brand_id INT,
+    supplier_id INT,
+    regular_price DECIMAL(15,2) NOT NULL,
+    sale_price DECIMAL(15,2),
+    cost_price DECIMAL(15,2),
+    stock_quantity INT NOT NULL DEFAULT 0,
+    low_stock_threshold INT DEFAULT 5,
+    weight DECIMAL(8,2),
+    dimensions VARCHAR(100), -- format: "LxWxH"
+    main_image_url VARCHAR(255),
+    is_featured BOOLEAN DEFAULT FALSE,
+    is_new BOOLEAN DEFAULT FALSE,
+    is_best_seller BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
+    tax_status ENUM('taxable', 'shipping', 'none') DEFAULT 'taxable',
+    tax_class VARCHAR(50),
+    meta_title VARCHAR(60),
+    meta_description VARCHAR(160),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id),
+    FOREIGN KEY (brand_id) REFERENCES brands(brand_id),
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
+);
+
+-- 12. جدول الصور المتعددة للمنتجات
+CREATE TABLE product_images (
+    image_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    alt_text VARCHAR(255),
+    display_order INT DEFAULT 0,
+    is_primary BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+);
+
+-- 13. جدول الألوان للمنتجات
+CREATE TABLE product_colors (
+    color_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    color_name VARCHAR(50) NOT NULL,
+    color_code VARCHAR(7), -- HEX code
+    additional_price DECIMAL(10,2) DEFAULT 0.00,
+    stock_quantity INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+);
+
+-- 14. جدول الأحجام والأوزان
+CREATE TABLE product_sizes (
+    size_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    size_name VARCHAR(50) NOT NULL,
+    size_description VARCHAR(100),
+    additional_price DECIMAL(10,2) DEFAULT 0.00,
+    stock_quantity INT DEFAULT 0,
+    weight DECIMAL(8,2),
+    is_active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+);
+
+-- 15. جدول المراجعات والتعليقات
+CREATE TABLE product_reviews (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    user_id INT NOT NULL,
+    rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    title VARCHAR(200),
+    comment TEXT,
+    is_approved BOOLEAN DEFAULT FALSE,
+    helpful_count INT DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_product_user_review (product_id, user_id)
+);
+
+-- 16. جدول الإعجابات على التعليقات
+CREATE TABLE review_likes (
+    like_id INT AUTO_INCREMENT PRIMARY KEY,
+    review_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (review_id) REFERENCES product_reviews(review_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_review_like (review_id, user_id)
+);
+
+-- 17. جدول المفضلة
+CREATE TABLE favorites (
+    favorite_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_favorite (user_id, product_id)
+);
+
+-- 18. جدول عربة التسوق
+CREATE TABLE cart (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    color_id INT NULL,
+    size_id INT NULL,
+    added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (color_id) REFERENCES product_colors(color_id),
+    FOREIGN KEY (size_id) REFERENCES product_sizes(size_id)
+);
+
+-- 19. جدول القسائم
+CREATE TABLE coupons (
+    coupon_id INT AUTO_INCREMENT PRIMARY KEY,
+    coupon_code VARCHAR(50) UNIQUE NOT NULL,
+    coupon_type ENUM('percentage', 'fixed', 'free_shipping') NOT NULL,
+    discount_value DECIMAL(10,2) NOT NULL,
+    minimum_amount DECIMAL(15,2) DEFAULT 0.00,
+    maximum_discount DECIMAL(15,2),
+    usage_limit INT,
+    used_count INT DEFAULT 0,
+    valid_from DATETIME,
+    valid_until DATETIME,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 20. جدول الطلبات الرئيسي
+CREATE TABLE orders (
+    order_id VARCHAR(50) PRIMARY KEY, -- Custom format: ORD-YYYYMMDD-XXXXX
+    user_id INT NOT NULL,
+    order_status ENUM('pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded') DEFAULT 'pending',
+    payment_status ENUM('pending', 'paid', 'failed', 'refunded', 'partially_refunded') DEFAULT 'pending',
+    shipping_status ENUM('pending', 'packed', 'shipped', 'delivered') DEFAULT 'pending',
+    total_amount DECIMAL(15,2) NOT NULL,
+    subtotal_amount DECIMAL(15,2) NOT NULL,
+    tax_amount DECIMAL(15,2) DEFAULT 0.00,
+    shipping_amount DECIMAL(15,2) DEFAULT 0.00,
+    discount_amount DECIMAL(15,2) DEFAULT 0.00,
+    coupon_id INT NULL,
+    shipping_address_id INT NOT NULL,
+    billing_address_id INT NOT NULL,
+    order_notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (coupon_id) REFERENCES coupons(coupon_id),
+    FOREIGN KEY (shipping_address_id) REFERENCES user_addresses(address_id),
+    FOREIGN KEY (billing_address_id) REFERENCES user_addresses(address_id)
+);
+
+-- 21. جدول تفاصيل الطلب
+CREATE TABLE order_items (
+    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL,
+    product_id INT NOT NULL,
+    product_name VARCHAR(255) NOT NULL, -- Snapshot of product name at time of order
+    product_price DECIMAL(15,2) NOT NULL, -- Snapshot of price at time of order
+    quantity INT NOT NULL,
+    color VARCHAR(50),
+    size VARCHAR(50),
+    subtotal DECIMAL(15,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+-- 22. جدول تتبع الشحن
+CREATE TABLE order_tracking (
+    tracking_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL,
+    tracking_number VARCHAR(100),
+    carrier VARCHAR(100),
+    status ENUM('pending', 'in_transit', 'out_for_delivery', 'delivered', 'exception') DEFAULT 'pending',
+    estimated_delivery DATE,
+    actual_delivery DATETIME NULL,
+    tracking_url VARCHAR(255),
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
+);
+
+-- 23. جدول أحداث تتبع الطلب
+CREATE TABLE order_tracking_events (
+    event_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL,
+    status VARCHAR(100) NOT NULL,
+    description TEXT,
+    location VARCHAR(255),
+    event_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_by INT, -- System or admin who updated
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 24. جدول المدفوعات
+CREATE TABLE payments (
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    payment_gateway VARCHAR(50),
+    transaction_id VARCHAR(255),
+    amount DECIMAL(15,2) NOT NULL,
+    currency VARCHAR(3) DEFAULT 'SAR',
+    status ENUM('pending', 'completed', 'failed', 'cancelled', 'refunded') DEFAULT 'pending',
+    gateway_response TEXT,
+    paid_at DATETIME NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
+-- 25. جدول التحويلات البنكية
+CREATE TABLE bank_transfers (
+    transfer_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL,
+    user_id INT NOT NULL,
+    bank_name VARCHAR(100),
+    account_name VARCHAR(100),
+    account_number VARCHAR(100),
+    transfer_amount DECIMAL(15,2) NOT NULL,
+    transfer_date DATE,
+    receipt_image VARCHAR(255),
+    reference_number VARCHAR(100),
+    admin_notes TEXT,
+    status ENUM('pending', 'verified', 'rejected') DEFAULT 'pending',
+    verified_by INT NULL,
+    verified_at DATETIME NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (verified_by) REFERENCES users(user_id)
+);
+
+-- 26. جدول الحسابات البنكية
+CREATE TABLE bank_accounts (
+    account_id INT AUTO_INCREMENT PRIMARY KEY,
+    bank_name VARCHAR(100) NOT NULL,
+    account_name VARCHAR(100) NOT NULL,
+    account_number VARCHAR(100) NOT NULL,
+    iban VARCHAR(50),
+    branch_name VARCHAR(100),
+    currency VARCHAR(3) DEFAULT 'SAR',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 27. جدول المدونة
+CREATE TABLE blog_posts (
+    post_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(300) UNIQUE NOT NULL,
+    content LONGTEXT,
+    excerpt TEXT,
+    author_id INT NOT NULL,
+    category_id INT NOT NULL,
+    featured_image VARCHAR(255),
+    status ENUM('draft', 'published', 'archived') DEFAULT 'draft',
+    published_at DATETIME NULL,
+    meta_title VARCHAR(60),
+    meta_description VARCHAR(160),
+    view_count INT DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(user_id),
+    FOREIGN KEY (category_id) REFERENCES categories(category_id)
+);
+
+-- 28. جدول فئات المدونة
+CREATE TABLE blog_categories (
+    blog_category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(100) NOT NULL,
+    category_slug VARCHAR(120) UNIQUE,
+    description TEXT,
+    parent_category_id INT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_category_id) REFERENCES blog_categories(blog_category_id)
+);
+
+-- 29. جدول الدردشة والدعم الفني
+CREATE TABLE support_tickets (
+    ticket_id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_number VARCHAR(50) UNIQUE NOT NULL,
+    user_id INT NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    description TEXT,
+    department ENUM('sales', 'technical', 'billing', 'general') DEFAULT 'general',
+    priority ENUM('low', 'medium', 'high', 'urgent') DEFAULT 'medium',
+    status ENUM('open', 'in_progress', 'waiting_customer', 'resolved', 'closed') DEFAULT 'open',
+    assigned_to INT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    resolved_at DATETIME NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (assigned_to) REFERENCES users(user_id)
+);
+
+-- 30. جدول رسائل الدردشة
+CREATE TABLE ticket_messages (
+    message_id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL,
+    sender_id INT NOT NULL,
+    message_type ENUM('text', 'image', 'file', 'system') DEFAULT 'text',
+    message_text TEXT,
+    attachment_url VARCHAR(255),
+    is_read BOOLEAN DEFAULT FALSE,
+    read_at DATETIME NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ticket_id) REFERENCES support_tickets(ticket_id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_id) REFERENCES users(user_id)
+);
+
+-- 31. جدول الإعلانات
+CREATE TABLE advertisements (
+    ad_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    image_url VARCHAR(255) NOT NULL,
+    target_url VARCHAR(255),
+    ad_position VARCHAR(50),
+    display_order INT DEFAULT 0,
+    start_date DATETIME,
+    end_date DATETIME,
+    is_active BOOLEAN DEFAULT TRUE,
+    click_count INT DEFAULT 0,
+    impression_count INT DEFAULT 0,
+    created_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 32. جدول الإشعارات
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    notification_type ENUM('email', 'sms', 'push', 'whatsapp', 'in_app') DEFAULT 'in_app',
+    related_entity_type ENUM('order', 'product', 'ticket', 'payment', 'system') DEFAULT 'system',
+    related_entity_id VARCHAR(50),
+    is_read BOOLEAN DEFAULT FALSE,
+    sent_status ENUM('pending', 'sent', 'failed') DEFAULT 'pending',
+    scheduled_at DATETIME,
+    sent_at DATETIME NULL,
+    read_at DATETIME NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- 33. جدول المشتريات من الموردين
+CREATE TABLE purchases (
+    purchase_id INT AUTO_INCREMENT PRIMARY KEY,
+    purchase_number VARCHAR(50) UNIQUE NOT NULL,
+    supplier_id INT NOT NULL,
+    purchase_date DATE NOT NULL,
+    expected_delivery_date DATE,
+    actual_delivery_date DATE,
+    total_amount DECIMAL(15,2) NOT NULL,
+    status ENUM('pending', 'ordered', 'received', 'cancelled', 'partial') DEFAULT 'pending',
+    payment_status ENUM('pending', 'paid', 'partial') DEFAULT 'pending',
+    notes TEXT,
+    created_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id),
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 34. جدول تفاصيل المشتريات
+CREATE TABLE purchase_items (
+    purchase_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    purchase_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_cost DECIMAL(15,2) NOT NULL,
+    total_cost DECIMAL(15,2) NOT NULL,
+    received_quantity INT DEFAULT 0,
+    FOREIGN KEY (purchase_id) REFERENCES purchases(purchase_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+-- 35. جدول حركة المخزون
+CREATE TABLE inventory_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    change_type ENUM('purchase', 'sale', 'return', 'adjustment', 'damage', 'transfer') NOT NULL,
+    change_quantity INT NOT NULL,
+    new_quantity INT NOT NULL,
+    reference_type ENUM('order', 'purchase', 'adjustment', 'return') NOT NULL,
+    reference_id VARCHAR(50) NOT NULL,
+    notes TEXT,
+    created_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 36. جدول التسعير والخصومات الخاصة
+CREATE TABLE product_discounts (
+    discount_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    discount_type ENUM('percentage', 'fixed') NOT NULL,
+    discount_value DECIMAL(10,2) NOT NULL,
+    start_date DATETIME,
+    end_date DATETIME,
+    min_quantity INT DEFAULT 1,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 37. جدول إعدادات الموقع
+CREATE TABLE site_settings (
+    setting_id INT AUTO_INCREMENT PRIMARY KEY,
+    setting_key VARCHAR(100) UNIQUE NOT NULL,
+    setting_value LONGTEXT,
+    setting_type ENUM('string', 'number', 'boolean', 'json', 'text') DEFAULT 'string',
+    description TEXT,
+    updated_by INT,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (updated_by) REFERENCES users(user_id)
+);
+
+-- 38. جدول الشروط والأحكام
+CREATE TABLE terms_conditions (
+    term_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content LONGTEXT NOT NULL,
+    version VARCHAR(20),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    effective_from DATETIME,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 39. جدول سياسات الخصوصية
+CREATE TABLE privacy_policies (
+    policy_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content LONGTEXT NOT NULL,
+    version VARCHAR(20),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    effective_from DATETIME,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+-- 40. جدول الفواتير
+CREATE TABLE invoices (
+    invoice_id INT AUTO_INCREMENT PRIMARY KEY,
+    invoice_number VARCHAR(50) UNIQUE NOT NULL,
+    order_id VARCHAR(50) NOT NULL,
+    invoice_date DATE NOT NULL,
+    due_date DATE,
+    total_amount DECIMAL(15,2) NOT NULL,
+    tax_amount DECIMAL(15,2) DEFAULT 0.00,
+    status ENUM('draft', 'sent', 'paid', 'overdue', 'cancelled') DEFAULT 'draft',
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
+-- 41. جدول المرتجعات
+CREATE TABLE returns (
+    return_id INT AUTO_INCREMENT PRIMARY KEY,
+    return_number VARCHAR(50) UNIQUE NOT NULL,
+    order_id VARCHAR(50) NOT NULL,
+    user_id INT NOT NULL,
+    return_reason TEXT NOT NULL,
+    return_status ENUM('requested', 'approved', 'rejected', 'received', 'refunded') DEFAULT 'requested',
+    refund_amount DECIMAL(15,2),
+    refund_method VARCHAR(50),
+    approved_by INT,
+    approved_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (approved_by) REFERENCES users(user_id)
+);
+
+-- 42. جدول العناصر المرتجعة
+CREATE TABLE return_items (
+    return_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    return_id INT NOT NULL,
+    order_item_id INT NOT NULL,
+    quantity INT NOT NULL,
+    reason TEXT,
+    condition ENUM('new', 'opened', 'damaged', 'used') DEFAULT 'new',
+    restocking_fee DECIMAL(15,2) DEFAULT 0.00,
+    FOREIGN KEY (return_id) REFERENCES returns(return_id) ON DELETE CASCADE,
+    FOREIGN KEY (order_item_id) REFERENCES order_items(order_item_id)
+);
+
+-- 43. جدول تسجيل الحركات
+CREATE TABLE audit_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL, -- NULL if action is performed by system
+    action_type VARCHAR(100) NOT NULL,
+    table_name VARCHAR(50),
+    record_id VARCHAR(50),
+    old_values JSON,
+    new_values JSON,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
+);
+
+-- 44. جدول الإحصائيات والتقارير
+CREATE TABLE reports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    report_type VARCHAR(50) NOT NULL,
+    report_name VARCHAR(255) NOT NULL,
+    report_data JSON,
+    date_from DATE,
+    date_to DATE,
+    generated_by INT,
+    generated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (generated_by) REFERENCES users(user_id)
+);
+
+-- 45. جدول من نحن
+CREATE TABLE about_us (
+    about_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content LONGTEXT NOT NULL,
+    mission TEXT,
+    vision TEXT,
+    values TEXT,
+    image_url VARCHAR(255),
+    is_active BOOLEAN DEFAULT TRUE,
+    updated_by INT,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (updated_by) REFERENCES users(user_id)
+);
+
+-- 46. جدول بيانات التواصل
+CREATE TABLE contact_info (
+    contact_id INT AUTO_INCREMENT PRIMARY KEY,
+    contact_type ENUM('phone', 'email', 'address', 'social') NOT NULL,
+    contact_value VARCHAR(255) NOT NULL,
+    display_order INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 47. جدول طلبات التواصل
+CREATE TABLE contact_requests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    subject VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('new', 'in_progress', 'resolved') DEFAULT 'new',
+    assigned_to INT,
+    response TEXT,
+    responded_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (assigned_to) REFERENCES users(user_id)
+);
+
+-- 48. جدول وسائل التواصل الاجتماعي
+CREATE TABLE social_media (
+    social_id INT AUTO_INCREMENT PRIMARY KEY,
+    platform_name VARCHAR(50) NOT NULL,
+    profile_url VARCHAR(255) NOT NULL,
+    icon_class VARCHAR(50),
+    display_order INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
