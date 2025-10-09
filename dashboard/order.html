@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الطلبات والفواتير - لوحة تحكم المتجر الإلكتروني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8A84FF;
+            --primary-dark: #524BC2;
+            --secondary: #FF6584;
+            --accent: #36D1DC;
+            --success: #4ECDC4;
+            --warning: #FF9A76;
+            --info: #6A89CC;
+            --light: #F8F9FD;
+            --dark: #2D3748;
+            --gray: #718096;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f2f8 100%);
+            color: var(--dark);
+            direction: rtl;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* الهيدر */
+        .header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            padding: 0 20px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-icon {
+            position: relative;
+            margin-left: 15px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .header-icon:hover {
+            background-color: var(--light);
+        }
+
+        .header-icon i {
+            font-size: 18px;
+            color: var(--gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: linear-gradient(135deg, var(--secondary), var(--warning));
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background-color: var(--light);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        /* محتوى الصفحة */
+        .page-content {
+            padding: 20px;
+        }
+
+        .page-title {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h2 {
+            font-size: 24px;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .page-title .date {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .page-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            background-color: white;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--light);
+            border-color: var(--primary);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #2BBBAD);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #2BBBAD, var(--success));
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #FF8A65);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #FF8A65, var(--warning));
+            box-shadow: 0 5px 15px rgba(255, 154, 118, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, var(--info), #82CCDD);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: linear-gradient(135deg, #82CCDD, var(--info));
+            box-shadow: 0 5px 15px rgba(106, 137, 204, 0.3);
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 15px;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .stat-info p {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .stat-trend {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--secondary);
+        }
+
+        .card-1 .stat-icon {
+            background: linear-gradient(135deg, #6C63FF, #8A84FF);
+            color: white;
+        }
+
+        .card-2 .stat-icon {
+            background: linear-gradient(135deg, #FF6584, #FF9A76);
+            color: white;
+        }
+
+        .card-3 .stat-icon {
+            background: linear-gradient(135deg, #36D1DC, #4ECDC4);
+            color: white;
+        }
+
+        .card-4 .stat-icon {
+            background: linear-gradient(135deg, #6A89CC, #82CCDD);
+            color: white;
+        }
+
+        /* فلتر الطلبات */
+        .orders-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            color: var(--dark);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background-color: var(--light);
+            border-color: var(--primary);
+        }
+
+        /* جدول الطلبات */
+        .orders-container {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .orders-header h3 {
+            font-size: 18px;
+            color: var(--dark);
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th, .orders-table td {
+            padding: 12px 10px;
+            text-align: right;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .orders-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .orders-table td {
+            font-size: 13px;
+        }
+
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .customer-details h4 {
+            font-size: 14px;
+            margin-bottom: 3px;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        .customer-details p {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .order-status.pending {
+            background-color: rgba(255, 154, 118, 0.15);
+            color: var(--warning);
+        }
+
+        .order-status.approved {
+            background-color: rgba(78, 205, 196, 0.15);
+            color: var(--success);
+        }
+
+        .order-status.not-paid {
+            background-color: rgba(255, 101, 132, 0.15);
+            color: var(--secondary);
+        }
+
+        .order-status.in-delivery {
+            background-color: rgba(106, 137, 204, 0.15);
+            color: var(--info);
+        }
+
+        .order-status.completed {
+            background-color: rgba(108, 99, 255, 0.15);
+            color: var(--primary);
+        }
+
+        .order-total {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background-color: var(--light);
+        }
+
+        .action-btn.view:hover {
+            color: var(--info);
+            border-color: var(--info);
+        }
+
+        .action-btn.print:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .action-btn.contact:hover {
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .action-btn.edit:hover {
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 8px;
+        }
+
+        .pagination button {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            color: var(--dark);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .pagination button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination button:hover:not(.active) {
+            background-color: var(--light);
+            border-color: var(--primary);
+        }
+
+        /* النوافذ المنبثقة */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 1000px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: var(--transition);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            color: var(--dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--gray);
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .invoice-info h2 {
+            font-size: 24px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .invoice-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .invoice-details p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .customer-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .customer-card, .payment-card {
+            background-color: var(--light);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .customer-card h4, .payment-card h4 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .customer-details-grid, .payment-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .detail-item {
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .products-section {
+            margin-bottom: 30px;
+        }
+
+        .products-section h4 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .products-table th, .products-table td {
+            padding: 12px 10px;
+            text-align: right;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .products-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .products-table td {
+            font-size: 13px;
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .product-details h5 {
+            font-size: 14px;
+            margin-bottom: 3px;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .product-details p {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .invoice-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .status-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .status-btn {
+            padding: 10px 15px;
+            border-radius: var(--radius);
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-btn.pending {
+            background-color: rgba(255, 154, 118, 0.15);
+            color: var(--warning);
+        }
+
+        .status-btn.approved {
+            background-color: rgba(78, 205, 196, 0.15);
+            color: var(--success);
+        }
+
+        .status-btn.not-paid {
+            background-color: rgba(255, 101, 132, 0.15);
+            color: var(--secondary);
+        }
+
+        .status-btn.in-delivery {
+            background-color: rgba(106, 137, 204, 0.15);
+            color: var(--info);
+        }
+
+        .status-btn.completed {
+            background-color: rgba(108, 99, 255, 0.15);
+            color: var(--primary);
+        }
+
+        .status-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .total-section {
+            background-color: var(--light);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total-row.final {
+            font-weight: 700;
+            font-size: 16px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .receipt-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: var(--radius);
+        }
+
+        .receipt-section h4 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .receipt-image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            transition: var(--transition);
+        }
+
+        .receipt-image:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .delivery-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: var(--radius);
+        }
+
+        .delivery-info h4 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* نافذة معاينة الصورة */
+        .image-modal {
+            max-width: 600px;
+        }
+
+        .image-preview {
+            width: 100%;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+        }
+
+        /* نافذة التواصل مع العميل */
+        .contact-modal {
+            max-width: 500px;
+        }
+
+        .contact-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .contact-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: var(--radius);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .contact-option:hover {
+            background-color: #e2e8f0;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .contact-icon.phone {
+            background: linear-gradient(135deg, var(--success), #2BBBAD);
+        }
+
+        .contact-icon.email {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        .contact-icon.whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        .contact-details h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .contact-details p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* نافذة طلبات العميل */
+        .customer-orders-modal {
+            max-width: 900px;
+        }
+
+        .customer-orders-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .customer-orders-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .customer-orders-info h3 {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .customer-orders-info p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .customer-orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .customer-orders-table th, .customer-orders-table td {
+            padding: 12px 10px;
+            text-align: right;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .customer-orders-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        /* التجاوب */
+        @media (max-width: 992px) {
+            .customer-section, .invoice-summary {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-content {
+                padding: 15px;
+            }
+            
+            .page-actions {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+            
+            .header {
+                padding: 0 15px;
+            }
+            
+            .orders-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .customer-details-grid, .payment-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .invoice-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                margin-left: 10px;
+            }
+            
+            .stat-info h3 {
+                font-size: 20px;
+            }
+            
+            .modal {
+                width: 95%;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .orders-filter {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header {
+                padding: 0 10px;
+            }
+            
+            .page-content {
+                padding: 10px;
+            }
+            
+            .orders-container {
+                padding: 15px;
+            }
+            
+            .modal-body, .modal-header, .modal-footer {
+                padding: 15px;
+            }
+            
+            .filter-btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الهيدر -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">
+                <i class="fas fa-shopping-bag" style="color: var(--primary); font-size: 24px;"></i>
+                <h1>المتجر الإلكتروني</h1>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-icon">
+                <i class="fas fa-bell"></i>
+                <div class="notification-badge">5</div>
+            </div>
+            <div class="header-icon">
+                <i class="fas fa-envelope"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">م</div>
+                <div class="user-info">
+                    <div class="user-name">محمد أحمد</div>
+                    <div class="user-role">مدير النظام</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- محتوى الصفحة -->
+    <div class="page-content">
+        <div class="page-title">
+            <h2>إدارة الطلبات والفواتير</h2>
+            <div class="date">الجمعة، 19 مايو 2023</div>
+        </div>
+
+        <!-- إحصائيات سريعة -->
+        <div class="stats-cards">
+            <div class="stat-card card-1">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>156</h3>
+                    <p>إجمالي الطلبات</p>
+                    <div class="stat-trend trend-up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>12 جديد</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card card-2">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>24</h3>
+                    <p>قيد المراجعة</p>
+                    <div class="stat-trend trend-up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>3 زيادة</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card card-3">
+                <div class="stat-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>42</h3>
+                    <p>قيد التوصيل</p>
+                    <div class="stat-trend trend-down">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>2 أقل</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card card-4">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>89</h3>
+                    <p>تم التسليم</p>
+                    <div class="stat-trend trend-up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>8 زيادة</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- شريط البحث والإجراءات -->
+        <div class="page-actions">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث برقم الفاتورة أو اسم العميل...">
+                <i class="fas fa-search" id="searchButton"></i>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary">
+                    <i class="fas fa-filter"></i>
+                    تصفية
+                </button>
+                <button class="btn btn-primary" id="printAllButton">
+                    <i class="fas fa-print"></i>
+                    طباعة التقارير
+                </button>
+            </div>
+        </div>
+
+        <!-- فلتر الطلبات -->
+        <div class="orders-filter">
+            <button class="filter-btn active" data-filter="all">الكل</button>
+            <button class="filter-btn" data-filter="pending">قيد المراجعة</button>
+            <button class="filter-btn" data-filter="approved">تمت الموافقة</button>
+            <button class="filter-btn" data-filter="not-paid">لم يتم الدفع</button>
+            <button class="filter-btn" data-filter="in-delivery">قيد التوصيل</button>
+            <button class="filter-btn" data-filter="completed">تم التسليم</button>
+        </div>
+
+        <!-- جدول الطلبات -->
+        <div class="orders-container">
+            <div class="orders-header">
+                <h3>قائمة الطلبات</h3>
+                <div class="view-toggle">
+                    <span>عرض 1-10 من 156</span>
+                </div>
+            </div>
+
+            <table class="orders-table" id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>العميل</th>
+                        <th>رقم الفاتورة</th>
+                        <th>التاريخ</th>
+                        <th>المبلغ</th>
+                        <th>طريقة الدفع</th>
+                        <th>طريقة التوصيل</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- سيتم تعبئة البيانات من خلال JavaScript -->
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+                <button>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة عرض الفاتورة -->
+    <div class="modal-overlay" id="invoiceModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>فاتورة الطلب</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="invoiceModalBody">
+                <!-- سيتم تعبئة محتوى الفاتورة من خلال JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeInvoice">إغلاق</button>
+                <button class="btn btn-primary" id="printInvoiceButton">
+                    <i class="fas fa-print"></i>
+                    طباعة الفاتورة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة معاينة الصورة -->
+    <div class="modal-overlay" id="imageModal">
+        <div class="modal image-modal">
+            <div class="modal-header">
+                <h3>معاينة الصورة</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="" alt="معاينة الصورة" class="image-preview" id="imagePreview">
+                <div class="image-details" id="imageDetails">
+                    <!-- سيتم تعبئة تفاصيل الصورة من خلال JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeImage">إغلاق</button>
+                <button class="btn btn-primary" id="downloadImageButton">
+                    <i class="fas fa-download"></i>
+                    تحميل الصورة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة التواصل مع العميل -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal contact-modal">
+            <div class="modal-header">
+                <h3 id="contactModalTitle">التواصل مع العميل</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="contactModalBody">
+                <!-- سيتم تعبئة محتوى التواصل من خلال JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeContact">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة طلبات العميل -->
+    <div class="modal-overlay" id="customerOrdersModal">
+        <div class="modal customer-orders-modal">
+            <div class="modal-header">
+                <h3>طلبات العميل</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="customerOrdersModalBody">
+                <!-- سيتم تعبئة محتوى طلبات العميل من خلال JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeCustomerOrders">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الطلبات
+        const orders = [
+            {
+                id: 1,
+                customer: {
+                    id: 1,
+                    name: "أحمد محمد",
+                    email: "ahmed@example.com",
+                    phone: "+966501234567",
+                    avatar: "أ"
+                },
+                invoiceNumber: "INV-2023-001",
+                date: "2023-05-18",
+                total: "1,250 ر.س",
+                paymentMethod: "بطاقة ائتمان",
+                deliveryMethod: "توصيل سريع",
+                status: "pending",
+                products: [
+                    { id: 1, name: "تيشيرت قطني رياضي", size: "L", color: "أزرق", quantity: 2, price: "150 ر.س", total: "300 ر.س" },
+                    { id: 2, name: "حذاء رياضي", size: "42", color: "أسود", quantity: 1, price: "450 ر.س", total: "450 ر.س" },
+                    { id: 3, name: "ساعة ذكية", size: "قاس واحد", color: "فضي", quantity: 1, price: "500 ر.س", total: "500 ر.س" }
+                ],
+                subtotal: "1,250 ر.س",
+                tax: "187.5 ر.س",
+                shipping: "25 ر.س",
+                finalTotal: "1,462.5 ر.س",
+                bankReceipt: "https://via.placeholder.com/300x200?text=صورة+إيصال+الدفع",
+                deliveryInfo: {
+                    address: "الرياض، حي العليا، شارع الملك فهد",
+                    estimatedDelivery: "2023-05-20",
+                    trackingNumber: "TRK-789456123"
+                }
+            },
+            {
+                id: 2,
+                customer: {
+                    id: 2,
+                    name: "سارة عبدالله",
+                    email: "sara@example.com",
+                    phone: "+966501234568",
+                    avatar: "س"
+                },
+                invoiceNumber: "INV-2023-002",
+                date: "2023-05-17",
+                total: "3,499 ر.س",
+                paymentMethod: "الدفع عند الاستلام",
+                deliveryMethod: "توصيل عادي",
+                status: "approved",
+                products: [
+                    { id: 4, name: "هاتف سامسونج جالاكسي S23", size: "قاس واحد", color: "أسود", quantity: 1, price: "3,499 ر.س", total: "3,499 ر.س" }
+                ],
+                subtotal: "3,499 ر.س",
+                tax: "524.85 ر.س",
+                shipping: "0 ر.س",
+                finalTotal: "4,023.85 ر.س",
+                bankReceipt: null,
+                deliveryInfo: {
+                    address: "جدة، حي الصفا، شارع الأمير سلطان",
+                    estimatedDelivery: "2023-05-22",
+                    trackingNumber: "TRK-789456124"
+                }
+            },
+            {
+                id: 3,
+                customer: {
+                    id: 3,
+                    name: "فاطمة علي",
+                    email: "fatima@example.com",
+                    phone: "+966501234569",
+                    avatar: "ف"
+                },
+                invoiceNumber: "INV-2023-003",
+                date: "2023-05-16",
+                total: "899 ر.س",
+                paymentMethod: "تحويل بنكي",
+                deliveryMethod: "توصيل سريع",
+                status: "not-paid",
+                products: [
+                    { id: 5, name: "سماعات أبل AirPods Pro", size: "قاس واحد", color: "أبيض", quantity: 1, price: "899 ر.س", total: "899 ر.س" }
+                ],
+                subtotal: "899 ر.س",
+                tax: "134.85 ر.س",
+                shipping: "25 ر.س",
+                finalTotal: "1,058.85 ر.س",
+                bankReceipt: "https://via.placeholder.com/300x200?text=صورة+إيصال+التحويل",
+                deliveryInfo: {
+                    address: "الدمام، حي النخيل، شارع الملك خالد",
+                    estimatedDelivery: "2023-05-19",
+                    trackingNumber: "TRK-789456125"
+                }
+            },
+            {
+                id: 4,
+                customer: {
+                    id: 4,
+                    name: "خالد أحمد",
+                    email: "khaled@example.com",
+                    phone: "+966501234570",
+                    avatar: "خ"
+                },
+                invoiceNumber: "INV-2023-004",
+                date: "2023-05-15",
+                total: "2,150 ر.س",
+                paymentMethod: "بطاقة ائتمان",
+                deliveryMethod: "توصيل عادي",
+                status: "in-delivery",
+                products: [
+                    { id: 6, name: "لابتوب ديل XPS 13", size: "قاس واحد", color: "فضي", quantity: 1, price: "2,150 ر.س", total: "2,150 ر.س" }
+                ],
+                subtotal: "2,150 ر.س",
+                tax: "322.5 ر.س",
+                shipping: "0 ر.س",
+                finalTotal: "2,472.5 ر.س",
+                bankReceipt: "https://via.placeholder.com/300x200?text=صورة+إيصال+الدفع",
+                deliveryInfo: {
+                    address: "الرياض، حي الملز، شارع العليا العام",
+                    estimatedDelivery: "2023-05-18",
+                    trackingNumber: "TRK-789456126"
+                }
+            },
+            {
+                id: 5,
+                customer: {
+                    id: 5,
+                    name: "نورة سعد",
+                    email: "nora@example.com",
+                    phone: "+966501234571",
+                    avatar: "ن"
+                },
+                invoiceNumber: "INV-2023-005",
+                date: "2023-05-14",
+                total: "5,299 ر.س",
+                paymentMethod: "الدفع عند الاستلام",
+                deliveryMethod: "توصيل سريع",
+                status: "completed",
+                products: [
+                    { id: 7, name: "لابتوب ديل XPS 15", size: "قاس واحد", color: "أسود", quantity: 1, price: "5,299 ر.س", total: "5,299 ر.س" }
+                ],
+                subtotal: "5,299 ر.س",
+                tax: "794.85 ر.س",
+                shipping: "25 ر.س",
+                finalTotal: "6,118.85 ر.س",
+                bankReceipt: null,
+                deliveryInfo: {
+                    address: "مكة، حي العزيزية، شارع الستين",
+                    estimatedDelivery: "2023-05-16",
+                    trackingNumber: "TRK-789456127"
+                }
+            }
+        ];
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            renderOrdersTable(orders);
+            setupEventListeners();
+        });
+
+        // عرض جدول الطلبات
+        function renderOrdersTable(ordersToRender) {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+
+            if (ordersToRender.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 30px;">
+                            <i class="fas fa-inbox" style="font-size: 48px; color: var(--gray); margin-bottom: 15px;"></i>
+                            <p>لا توجد طلبات لعرضها</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            ordersToRender.forEach(order => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-order-id', order.id);
+                row.setAttribute('data-status', order.status);
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="customer-info">
+                            <div class="customer-avatar">${order.customer.avatar}</div>
+                            <div class="customer-details">
+                                <h4 class="customer-name">${order.customer.name}</h4>
+                                <p>${order.customer.email}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="order-id">#${order.invoiceNumber}</div>
+                    </td>
+                    <td>${order.date}</td>
+                    <td>
+                        <div class="order-total">${order.total}</div>
+                    </td>
+                    <td>${order.paymentMethod}</td>
+                    <td>${order.deliveryMethod}</td>
+                    <td>
+                        <span class="order-status ${order.status}">${getStatusText(order.status)}</span>
+                    </td>
+                    <td>
+                        <div class="order-actions">
+                            <button class="action-btn view" data-order="${order.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn print" data-order="${order.id}">
+                                <i class="fas fa-print"></i>
+                            </button>
+                            <button class="action-btn contact" data-customer="${order.customer.id}">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // الحصول على نص الحالة
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'قيد المراجعة',
+                'approved': 'تمت الموافقة',
+                'not-paid': 'لم يتم الدفع',
+                'in-delivery': 'قيد التوصيل',
+                'completed': 'تم التسليم'
+            };
+            return statusMap[status] || status;
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // تصفية الطلبات
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // تحديث الأزرار النشطة
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // تصفية الطلبات
+                    if (filter === 'all') {
+                        renderOrdersTable(orders);
+                    } else {
+                        const filteredOrders = orders.filter(order => order.status === filter);
+                        renderOrdersTable(filteredOrders);
+                    }
+                });
+            });
+
+            // البحث عن الطلبات
+            document.getElementById('searchButton').addEventListener('click', performSearch);
+            document.getElementById('searchInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // فتح نافذة الفاتورة
+            document.addEventListener('click', function(event) {
+                if (event.target.closest('.action-btn.view')) {
+                    const orderId = event.target.closest('.action-btn.view').getAttribute('data-order');
+                    openInvoiceModal(orderId);
+                }
+                
+                if (event.target.closest('.order-id')) {
+                    const orderId = event.target.closest('tr').getAttribute('data-order-id');
+                    openInvoiceModal(orderId);
+                }
+            });
+
+            // فتح نافذة التواصل مع العميل
+            document.addEventListener('click', function(event) {
+                if (event.target.closest('.action-btn.contact')) {
+                    const customerId = event.target.closest('.action-btn.contact').getAttribute('data-customer');
+                    openContactModal(customerId);
+                }
+                
+                if (event.target.closest('.customer-name')) {
+                    const customerId = event.target.closest('tr').getAttribute('data-order-id');
+                    const order = orders.find(o => o.id == customerId);
+                    if (order) {
+                        openCustomerOrdersModal(order.customer.id);
+                    }
+                }
+            });
+
+            // فتح نافذة معاينة الصورة
+            document.addEventListener('click', function(event) {
+                if (event.target.closest('.product-image') || event.target.closest('.receipt-image')) {
+                    const imageUrl = event.target.closest('.product-image, .receipt-image').getAttribute('src');
+                    const altText = event.target.closest('.product-image, .receipt-image').getAttribute('alt');
+                    openImageModal(imageUrl, altText);
+                }
+            });
+
+            // فتح صفحة المنتج
+            document.addEventListener('click', function(event) {
+                if (event.target.closest('.product-details h5')) {
+                    const productName = event.target.closest('.product-details h5').textContent;
+                    openProductPage(productName);
+                }
+            });
+
+            // طباعة الفاتورة
+            document.getElementById('printInvoiceButton').addEventListener('click', function() {
+                printInvoice();
+            });
+
+            // طباعة جميع التقارير
+            document.getElementById('printAllButton').addEventListener('click', function() {
+                printAllReports();
+            });
+
+            // إغلاق النوافذ المنبثقة
+            document.querySelectorAll('.close-modal, #closeInvoice, #closeImage, #closeContact, #closeCustomerOrders').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                });
+            });
+
+            // تغيير حالة الطلب
+            document.addEventListener('click', function(event) {
+                if (event.target.closest('.status-btn')) {
+                    const statusBtn = event.target.closest('.status-btn');
+                    const status = statusBtn.classList[1]; // pending, approved, etc.
+                    const orderId = document.getElementById('invoiceModal').getAttribute('data-order-id');
+                    
+                    changeOrderStatus(orderId, status);
+                }
+            });
+        }
+
+        // البحث عن الطلبات
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                renderOrdersTable(orders);
+                return;
+            }
+            
+            const filteredOrders = orders.filter(order => 
+                order.invoiceNumber.toLowerCase().includes(searchTerm) ||
+                order.customer.name.toLowerCase().includes(searchTerm) ||
+                order.customer.email.toLowerCase().includes(searchTerm) ||
+                order.customer.phone.includes(searchTerm)
+            );
+            
+            renderOrdersTable(filteredOrders);
+        }
+
+        // فتح نافذة الفاتورة
+        function openInvoiceModal(orderId) {
+            const order = orders.find(o => o.id == orderId);
+            if (!order) return;
+            
+            const modalBody = document.getElementById('invoiceModalBody');
+            modalBody.innerHTML = `
+                <div class="invoice-header">
+                    <div class="invoice-info">
+                        <h2>فاتورة #${order.invoiceNumber}</h2>
+                        <div class="invoice-details">
+                            <p>تاريخ الفاتورة: ${order.date}</p>
+                            <p>وقت الفاتورة: 10:30 صباحاً</p>
+                        </div>
+                    </div>
+                    <div class="invoice-status">
+                        <span class="order-status ${order.status}">${getStatusText(order.status)}</span>
+                    </div>
+                </div>
+
+                <div class="customer-section">
+                    <div class="customer-card">
+                        <h4>معلومات العميل</h4>
+                        <div class="customer-details-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">الاسم الكامل</div>
+                                <div class="detail-value">${order.customer.name}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">البريد الإلكتروني</div>
+                                <div class="detail-value">${order.customer.email}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">رقم الهاتف</div>
+                                <div class="detail-value">${order.customer.phone}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">العنوان</div>
+                                <div class="detail-value">${order.deliveryInfo.address}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="payment-card">
+                        <h4>معلومات الدفع والتوصيل</h4>
+                        <div class="payment-details-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">طريقة الدفع</div>
+                                <div class="detail-value">${order.paymentMethod}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">طريقة التوصيل</div>
+                                <div class="detail-value">${order.deliveryMethod}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">رقم التتبع</div>
+                                <div class="detail-value">${order.deliveryInfo.trackingNumber}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">موعد التوصيل المتوقع</div>
+                                <div class="detail-value">${order.deliveryInfo.estimatedDelivery}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                ${order.bankReceipt ? `
+                <div class="receipt-section">
+                    <h4>إيصال الدفع</h4>
+                    <img src="${order.bankReceipt}" alt="إيصال الدفع" class="receipt-image">
+                    <p>تم الدفع عبر: ${order.paymentMethod}</p>
+                </div>
+                ` : ''}
+
+                <div class="products-section">
+                    <h4>المنتجات المطلوبة</h4>
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>المنتج</th>
+                                <th>الكمية</th>
+                                <th>السعر</th>
+                                <th>المجموع</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${order.products.map(product => `
+                                <tr>
+                                    <td>
+                                        <div class="product-info">
+                                            <div class="product-image">
+                                                <i class="fas fa-box"></i>
+                                            </div>
+                                            <div class="product-details">
+                                                <h5>${product.name}</h5>
+                                                <p>${product.size ? `المقاس: ${product.size}` : ''} ${product.color ? `- اللون: ${product.color}` : ''}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>${product.quantity}</td>
+                                    <td>
+                                        <div class="product-price">${product.price}</div>
+                                    </td>
+                                    <td>
+                                        <div class="product-price">${product.total}</div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="invoice-summary">
+                    <div class="status-actions">
+                        <h4>تغيير حالة الطلب</h4>
+                        <button class="status-btn pending">
+                            <i class="fas fa-clock"></i>
+                            قيد المراجعة
+                        </button>
+                        <button class="status-btn approved">
+                            <i class="fas fa-check"></i>
+                            تمت الموافقة
+                        </button>
+                        <button class="status-btn not-paid">
+                            <i class="fas fa-times"></i>
+                            لم يتم الدفع
+                        </button>
+                        <button class="status-btn in-delivery">
+                            <i class="fas fa-truck"></i>
+                            قيد التوصيل
+                        </button>
+                        <button class="status-btn completed">
+                            <i class="fas fa-box"></i>
+                            تم التسليم
+                        </button>
+                    </div>
+                    <div class="total-section">
+                        <h4>ملخص الفاتورة</h4>
+                        <div class="total-row">
+                            <span>المجموع الجزئي:</span>
+                            <span>${order.subtotal}</span>
+                        </div>
+                        <div class="total-row">
+                            <span>ضريبة القيمة المضافة (15%):</span>
+                            <span>${order.tax}</span>
+                        </div>
+                        <div class="total-row">
+                            <span>رسوم الشحن:</span>
+                            <span>${order.shipping}</span>
+                        </div>
+                        <div class="total-row final">
+                            <span>المبلغ الإجمالي:</span>
+                            <span>${order.finalTotal}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('invoiceModal').setAttribute('data-order-id', orderId);
+            document.getElementById('invoiceModal').classList.add('active');
+        }
+
+        // فتح نافذة التواصل مع العميل
+        function openContactModal(customerId) {
+            const customerOrders = orders.filter(order => order.customer.id == customerId);
+            if (customerOrders.length === 0) return;
+            
+            const customer = customerOrders[0].customer;
+            
+            const modalBody = document.getElementById('contactModalBody');
+            modalBody.innerHTML = `
+                <div class="customer-info">
+                    <div class="customer-avatar" style="width: 60px; height: 60px; font-size: 24px;">${customer.avatar}</div>
+                    <div class="customer-details">
+                        <h4>${customer.name}</h4>
+                        <p>عميل منذ: يناير 2023</p>
+                    </div>
+                </div>
+
+                <div class="contact-options">
+                    <div class="contact-option" id="phoneContact">
+                        <div class="contact-icon phone">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>الاتصال هاتفياً</h4>
+                            <p>${customer.phone}</p>
+                        </div>
+                    </div>
+                    <div class="contact-option" id="whatsappContact">
+                        <div class="contact-icon whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>التواصل عبر واتساب</h4>
+                            <p>${customer.phone}</p>
+                        </div>
+                    </div>
+                    <div class="contact-option" id="emailContact">
+                        <div class="contact-icon email">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>إرسال بريد إلكتروني</h4>
+                            <p>${customer.email}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('contactModalTitle').textContent = `التواصل مع ${customer.name}`;
+            document.getElementById('contactModal').classList.add('active');
+            
+            // إضافة مستمعي الأحداث للاتصال
+            document.getElementById('phoneContact').addEventListener('click', function() {
+                alert(`سيتم الاتصال بالرقم: ${customer.phone}`);
+            });
+            
+            document.getElementById('whatsappContact').addEventListener('click', function() {
+                alert(`سيتم فتح تطبيق واتساب للرقم: ${customer.phone}`);
+            });
+            
+            document.getElementById('emailContact').addEventListener('click', function() {
+                alert(`سيتم فتح بريد إلكتروني إلى: ${customer.email}`);
+            });
+        }
+
+        // فتح نافذة طلبات العميل
+        function openCustomerOrdersModal(customerId) {
+            const customerOrders = orders.filter(order => order.customer.id == customerId);
+            if (customerOrders.length === 0) return;
+            
+            const customer = customerOrders[0].customer;
+            
+            const modalBody = document.getElementById('customerOrdersModalBody');
+            modalBody.innerHTML = `
+                <div class="customer-orders-header">
+                    <div class="customer-orders-avatar">${customer.avatar}</div>
+                    <div class="customer-orders-info">
+                        <h3>${customer.name}</h3>
+                        <p>${customer.email} | ${customer.phone}</p>
+                    </div>
+                </div>
+                
+                <h4>طلبات العميل (${customerOrders.length})</h4>
+                
+                <table class="customer-orders-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الفاتورة</th>
+                            <th>التاريخ</th>
+                            <th>المبلغ</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${customerOrders.map(order => `
+                            <tr>
+                                <td>
+                                    <div class="order-id">#${order.invoiceNumber}</div>
+                                </td>
+                                <td>${order.date}</td>
+                                <td>
+                                    <div class="order-total">${order.total}</div>
+                                </td>
+                                <td>
+                                    <span class="order-status ${order.status}">${getStatusText(order.status)}</span>
+                                </td>
+                                <td>
+                                    <div class="order-actions">
+                                        <button class="action-btn view" data-order="${order.id}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn print" data-order="${order.id}">
+                                            <i class="fas fa-print"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('customerOrdersModal').classList.add('active');
+            
+            // إضافة مستمعي الأحداث للأزرار داخل النافذة
+            modalBody.querySelectorAll('.action-btn.view').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-order');
+                    document.getElementById('customerOrdersModal').classList.remove('active');
+                    openInvoiceModal(orderId);
+                });
+            });
+            
+            modalBody.querySelectorAll('.action-btn.print').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-order');
+                    printSingleInvoice(orderId);
+                });
+            });
+        }
+
+        // فتح نافذة معاينة الصورة
+        function openImageModal(imageUrl, altText) {
+            document.getElementById('imagePreview').src = imageUrl;
+            document.getElementById('imagePreview').alt = altText;
+            
+            document.getElementById('imageDetails').innerHTML = `
+                <p>${altText}</p>
+                <p>تم رفع الصورة من قبل العميل</p>
+            `;
+            
+            document.getElementById('imageModal').classList.add('active');
+        }
+
+        // فتح صفحة المنتج
+        function openProductPage(productName) {
+            alert(`سيتم نقل您 إلى صفحة المنتج: ${productName}`);
+            // في التطبيق الحقيقي، هنا سيتم نقل المستخدم إلى صفحة المنتج
+        }
+
+        // تغيير حالة الطلب
+        function changeOrderStatus(orderId, newStatus) {
+            const orderIndex = orders.findIndex(o => o.id == orderId);
+            if (orderIndex === -1) return;
+            
+            orders[orderIndex].status = newStatus;
+            
+            // تحديث النافذة المنبثقة
+            const statusElement = document.querySelector('.invoice-status .order-status');
+            statusElement.className = `order-status ${newStatus}`;
+            statusElement.textContent = getStatusText(newStatus);
+            
+            // تحديث الجدول الرئيسي
+            const tableRow = document.querySelector(`tr[data-order-id="${orderId}"]`);
+            if (tableRow) {
+                const statusCell = tableRow.querySelector('.order-status');
+                statusCell.className = `order-status ${newStatus}`;
+                statusCell.textContent = getStatusText(newStatus);
+            }
+            
+            alert(`تم تغيير حالة الطلب إلى: ${getStatusText(newStatus)}`);
+        }
+
+        // طباعة الفاتورة
+        function printInvoice() {
+            alert('سيتم فتح نافذة الطباعة للفاتورة الحالية');
+            // في التطبيق الحقيقي، هنا سيتم فتح نافذة الطباعة
+        }
+
+        // طباعة فاتورة واحدة
+        function printSingleInvoice(orderId) {
+            alert(`سيتم طباعة الفاتورة رقم: ${orderId}`);
+            // في التطبيق الحقيقي، هنا سيتم فتح نافذة الطباعة للفاتورة المحددة
+        }
+
+        // طباعة جميع التقارير
+        function printAllReports() {
+            alert('سيتم طباعة تقرير جميع الطلبات');
+            // في التطبيق الحقيقي، هنا سيتم فتح نافذة الطباعة لجميع الطلبات
+        }
+    </script>
+</body>
+</html>
